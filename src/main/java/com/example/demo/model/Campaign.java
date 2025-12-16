@@ -4,6 +4,8 @@ public class Campaign {
     private Long id;
     private String campaignName;
     private Date startDate;
-    private
+    private Date endDate;
+    private BigDecimal budget;
+    private Boolean active;
     
 }
