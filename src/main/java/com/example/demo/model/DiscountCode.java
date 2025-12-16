@@ -1,4 +1,4 @@
-package com.example.R.model;
+package com.example.demo.model;
 
 public class DiscountCode {
     private Long id;
