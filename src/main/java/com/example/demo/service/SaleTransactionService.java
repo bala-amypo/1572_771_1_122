@@ -1,6 +1,6 @@
 package com.example.demo.service;
 
-import com.example.ROI.model.SaleTransaction;
+import com.example.demo.model.SaleTransaction;
 
 public interface SaleTransactionService {
     SaleTransaction logTransaction(SaleTransaction transaction);
