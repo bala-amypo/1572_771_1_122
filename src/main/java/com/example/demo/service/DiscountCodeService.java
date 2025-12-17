@@ -1,4 +1,4 @@
-package com.example.ROI.service;
+package com.example.demo.service;
 
 import com.example.ROI.model.DiscountCode;
 
