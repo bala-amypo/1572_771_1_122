@@ -1,0 +1,13 @@
+package com.example.ROI.service;
+
+import java.util.List;
+
+import com.example.ROI.model.Campaign;
+
+public interface CampaignService {
+    Campaign createCampaign(Campaign campaign);
+    Campaign updateCampaign(Long id,Campaign campaign);
+    Campaign getCampaignById(Long id);
+    List<Campaign>getAllCampaigns();
+    void deactivateCampaign(Long id);
+} 
