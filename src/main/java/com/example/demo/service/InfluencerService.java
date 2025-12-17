@@ -2,7 +2,7 @@ package com.example.demo.service;
 
 import java.util.List;
 
-import com.example.ROI.model.Influencer;
+import com.example.demo.model.Influencer;
 
 public interface InfluencerService {
     Influencer creatInfluencer(Influencer influencer);
