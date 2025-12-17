@@ -1,6 +1,6 @@
 package com.example.demo.service;
 
-import com.example.ROI.model.DiscountCode;
+import com.example.demo.model.DiscountCode;
 
 public interface DiscountCodeService {
     DiscountCode creaDiscountCode(DiscountCode code);
