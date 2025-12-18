@@ -1,53 +1,46 @@
-package com.example.demo.service.impl;
+package com.example.demo.controller;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.demo.model.Influencer;
-import com.example.demo.repository.InfluencerRepository;
 import com.example.demo.service.InfluencerService;
 
-@Service
-public class InfluencerServiceImpl implements InfluencerService {
+@RestController
+@RequestMapping("/api/influencers")
+public class InfluencerController {
 
     @Autowired
-    private InfluencerRepository influencerRepository;
+    private InfluencerService influencerService;
 
-    @Override
-    public Influencer creatInfluencer(Influencer influencer) {
-        return influencerRepository.save(influencer);
-    }
-
-    @Override
-    public Influencer updatInfluencer(Long id, Influencer influencer) {
-        Influencer existing = influencerRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Influencer not found with id: " + id));
-
-        existing.setName(influencer.getName());
-        existing.setActive(influencer.getActive());
-
-        return influencerRepository.save(existing);
-    }
-
-    @Override
-    public Influencer getInfluencerById(Long id) {
-        return influencerRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Influencer not found with id: " + id));
-    }
-
-    @Override
+    @GetMapping
     public List<Influencer> getAllInfluencers() {
-        return influencerRepository.findAll();
+        return influencerService.getAllInfluencers();
     }
 
-    @Override
-    public void deactivateInfluencer(Long id) {
-        Influencer influencer = influencerRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Influencer not found with id: " + id));
+    @PostMapping
+    public Influencer createInfluencer(@RequestBody Influencer influencer) {
+        return influencerService.creatInfluencer(influencer);
+    }
 
-        influencer.setActive(false);
-        influencerRepository.save(influencer);
+    @GetMapping("/{id}")
+    public Influencer getInfluencerById(@PathVariable Long id) {
+        return influencerService.getInfluencerById(id);
+    }
+
+    @PutMapping("/{id}")
+    public Influencer updateInfluencer(
+            @PathVariable Long id,
+            @RequestBody Influencer influencer) {
+
+        return influencerService.updatInfluencer(id, influencer);
+    }
+
+    @PutMapping("/{id}/deactivate")
+    public String deactivateInfluencer(@PathVariable Long id) {
+        influencerService.deactivateInfluencer(id);
+        return "Influencer deactivated successfully";
     }
 }
