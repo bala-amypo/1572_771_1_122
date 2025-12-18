@@ -1,8 +1,9 @@
+// src/main/java/com/example/demo/service/InfluencerService.java
 package com.example.demo.service;
 
-import java.util.List;
-
 import com.example.demo.model.Influencer;
+
+import java.util.List;
 
 public interface InfluencerService {
 
