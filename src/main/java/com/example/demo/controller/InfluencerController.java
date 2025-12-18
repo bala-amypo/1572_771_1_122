@@ -2,59 +2,44 @@ package com.example.demo.controller;
 
 import java.util.List;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.demo.model.Influencer;
 import com.example.demo.service.InfluencerService;
 
 @RestController
-@RequestMapping("/influencers")
+@RequestMapping("/api/influencers")
 public class InfluencerController {
 
-    private final InfluencerService influencerService;
+    @Autowired
+    private InfluencerService influencerService;
 
-    // ✅ Constructor injection
-    public InfluencerController(InfluencerService influencerService) {
-        this.influencerService = influencerService;
-    }
-
-    /**
-     * POST /influencers
-     * Create a new influencer
-     */
-    @PostMapping
-    @PreAuthorize("isAuthenticated()") // 🔐 JWT protected
-    public ResponseEntity<Influencer> createInfluencer(
-            @RequestBody Influencer influencer) {
-
-        Influencer created = influencerService.createInfluencer(influencer);
-        return new ResponseEntity<>(created, HttpStatus.CREATED);
-    }
-
-    /**
-     * GET /influencers
-     * Get all influencers
-     */
     @GetMapping
-    @PreAuthorize("isAuthenticated()") // 🔐 JWT protected
-    public ResponseEntity<List<Influencer>> getAllInfluencers() {
-
-        return ResponseEntity.ok(influencerService.getAllInfluencers());
+    public List<Influencer> getAllInfluencers() {
+        return influencerService.getAllInfluencers();
     }
 
-    /**
-     * GET /influencers/{id}
-     * Get influencer by id
-     * ResourceNotFoundException is allowed to propagate
-     */
-    @GetMapping("/{id}")
-    @PreAuthorize("isAuthenticated()") // 🔐 JWT protected
-    public ResponseEntity<Influencer> getInfluencerById(
-            @PathVariable Long id) {
+    @PostMapping
+    public Influencer createInfluencer(@RequestBody Influencer influencer) {
+        return influencerService.creatInfluencer(influencer);
+    }
 
-        return ResponseEntity.ok(influencerService.getInfluencerById(id));
+    @GetMapping("/{id}")
+    public Influencer getInfluencerById(@PathVariable Long id) {
+        return influencerService.getInfluencerById(id);
+    }
+
+    @PutMapping("/{id}")
+    public Influencer updateInfluencer(
+            @PathVariable Long id,
+            @RequestBody Influencer influencer) {
+        return influencerService.updatInfluencer(id, influencer);
+    }
+
+    @PutMapping("/{id}/deactivate")
+    public String deactivateInfluencer(@PathVariable Long id) {
+        influencerService.deactivateInfluencer(id);
+        return "Influencer deactivated successfully";
     }
 }
