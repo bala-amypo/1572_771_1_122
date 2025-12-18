@@ -1,12 +1,13 @@
+// src/main/java/com/example/demo/repository/InfluencerRepository.java
 package com.example.demo.repository;
-
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
 import com.example.demo.model.Influencer;
 
-@Repository
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.Optional;
+
 public interface InfluencerRepository extends JpaRepository<Influencer, Long> {
 
-    boolean existsBySocialHandle(String socialHandle);
+    Optional<Influencer> findBySocialHandle(String handle);
 }
