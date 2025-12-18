@@ -10,7 +10,6 @@ import com.example.demo.model.Influencer;
 import com.example.demo.service.InfluencerService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
 @RestController
 @RequestMapping("/api/influencers")
