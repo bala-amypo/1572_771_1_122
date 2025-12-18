@@ -1,76 +1,99 @@
-package com.example.demo.model;
+package com.example.ROI.model;
 
-import java.util.List;
+import java.sql.Timestamp;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
-@Table(
-    name = "influencers",
-    uniqueConstraints = {
-        @UniqueConstraint(columnNames = "social_handle")
-    }
-)
 public class Influencer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @NotBlank
     private String name;
 
-    @Column(name = "social_handle", nullable = false, unique = true)
+    @Column(unique = true)
+    @NotBlank
     private String socialHandle;
 
-    @Column(nullable = false)
-    private boolean active = true;
+    @Email
+    private String email;
 
-    // One Influencer → Many DiscountCodes
-    @OneToMany(mappedBy = "influencer", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<DiscountCode> discountCodes;
+    private Boolean active = true;
 
-    // ✅ No-argument constructor
-    public Influencer() {
-    }
+    private Timestamp createdAt;
 
-    // ✅ Parameterized constructor
-    public Influencer(String name, String socialHandle, boolean active) {
+    public Influencer() {}
+
+    public Influencer(String name, String socialHandle, String email, Boolean active, Timestamp createdAt) {
         this.name = name;
         this.socialHandle = socialHandle;
+        this.email = email;
         this.active = active;
+        this.createdAt = createdAt;
     }
 
-    // Getters & Setters
     public Long getId() {
         return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getSocialHandle() {
-        return socialHandle;
-    }
-
-    public boolean isActive() {
-        return active;
     }
 
     public void setId(Long id) {
         this.id = id;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getSocialHandle() {
+        return socialHandle;
     }
 
     public void setSocialHandle(String socialHandle) {
         this.socialHandle = socialHandle;
     }
 
-    public void setActive(boolean active) {
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
         this.active = active;
+    }
+
+    public Timestamp getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Timestamp createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        if (createdAt == null) {
+            createdAt = new Timestamp(System.currentTimeMillis());
+        }
     }
 }
