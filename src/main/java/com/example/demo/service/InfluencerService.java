@@ -1,46 +1,17 @@
-package com.example.demo.controller;
+package com.example.demo.service;
 
 import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
 import com.example.demo.model.Influencer;
-import com.example.demo.service.InfluencerService;
 
-@RestController
-@RequestMapping("/api/influencers")
-public class InfluencerController {
+public interface InfluencerService {
 
-    @Autowired
-    private InfluencerService influencerService;
+    Influencer creatInfluencer(Influencer influencer);
 
-    @GetMapping
-    public List<Influencer> getAllInfluencers() {
-        return influencerService.getAllInfluencers();
-    }
+    Influencer updatInfluencer(Long id, Influencer influencer);
 
-    @PostMapping
-    public Influencer createInfluencer(@RequestBody Influencer influencer) {
-        return influencerService.creatInfluencer(influencer);
-    }
+    Influencer getInfluencerById(Long id);
 
-    @GetMapping("/{id}")
-    public Influencer getInfluencerById(@PathVariable Long id) {
-        return influencerService.getInfluencerById(id);
-    }
+    List<Influencer> getAllInfluencers();
 
-    @PutMapping("/{id}")
-    public Influencer updateInfluencer(
-            @PathVariable Long id,
-            @RequestBody Influencer influencer) {
-
-        return influencerService.updatInfluencer(id, influencer);
-    }
-
-    @PutMapping("/{id}/deactivate")
-    public String deactivateInfluencer(@PathVariable Long id) {
-        influencerService.deactivateInfluencer(id);
-        return "Influencer deactivated successfully";
-    }
+    void deactivateInfluencer(Long id);
 }

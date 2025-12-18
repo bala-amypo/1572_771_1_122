@@ -1,7 +1,6 @@
 package com.example.demo.controller;
 
 import java.util.List;
-import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -9,41 +8,44 @@ import org.springframework.web.bind.annotation.*;
 import com.example.demo.model.Influencer;
 import com.example.demo.service.InfluencerService;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
-
 @RestController
 @RequestMapping("/api/influencers")
 public class InfluencerController {
 
     @Autowired
-    InfluencerService influencerService;
+    private InfluencerService influencerService;
 
+    // Get all influencers
     @GetMapping
-    public List<Influencer> getAll() {
-        return new ArrayList<>();
+    public List<Influencer> getAllInfluencers() {
+        return influencerService.getAllInfluencers();
     }
 
+    // Create new influencer
     @PostMapping
-    public Influencer create(@RequestBody Influencer influencer) {
+    public Influencer createInfluencer(@RequestBody Influencer influencer) {
         return influencerService.creatInfluencer(influencer);
     }
 
+    // Get influencer by ID
     @GetMapping("/{id}")
-    public Influencer getById(@PathVariable Long id) {
-        return influencerService.creatInfluencer(id);
+    public Influencer getInfluencerById(@PathVariable Long id) {
+        return influencerService.getInfluencerById(id);
     }
 
+    // Update influencer
     @PutMapping("/{id}")
-    public String update(@PathVariable Long id, @RequestBody Influencer influencer) {
-        if (influencerService.updatInfluencer(id, influencer) != null) {
-            return "Successful";
-        }
-        return "Not successful";
+    public Influencer updateInfluencer(
+            @PathVariable Long id,
+            @RequestBody Influencer influencer) {
+
+        return influencerService.updatInfluencer(id, influencer);
     }
 
+    // Deactivate influencer
     @PutMapping("/{id}/deactivate")
-    public String deactivate(@PathVariable Long id) {
+    public String deactivateInfluencer(@PathVariable Long id) {
         influencerService.deactivateInfluencer(id);
-        return "Successful";
+        return "Influencer deactivated successfully";
     }
 }
