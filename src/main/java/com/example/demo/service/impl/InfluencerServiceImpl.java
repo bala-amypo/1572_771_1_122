@@ -1,55 +1,48 @@
-package com.example.demo.service.impl;
-
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+// src/main/java/com/example/demo/service/InfluencerServiceImpl.java
+package com.example.demo.service;
 
 import com.example.demo.model.Influencer;
+
 import com.example.demo.repository.InfluencerRepository;
-import com.example.demo.service.InfluencerService;
+
+import com.example.demo.exception.ResourceNotFoundException;
+
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class InfluencerServiceImpl implements InfluencerService {
 
-    @Autowired
-    private InfluencerRepository influencerRepository;
+    private final InfluencerRepository influencerRepository;
+
+    public InfluencerServiceImpl(InfluencerRepository influencerRepository) {
+        this.influencerRepository = influencerRepository;
+    }
 
     @Override
     public Influencer createInfluencer(Influencer influencer) {
-        if (influencerRepository.existsBySocialHandle(influencer.getSocialHandle())) {
-            throw new IllegalArgumentException("Duplicate socialHandle not allowed");
+        if (influencerRepository.findBySocialHandle(influencer.getSocialHandle()).isPresent()) {
+            throw new IllegalArgumentException("Duplicate social handle exists");
         }
         return influencerRepository.save(influencer);
     }
 
     @Override
     public Influencer updateInfluencer(Long id, Influencer influencer) {
-        Optional<Influencer> existing = influencerRepository.findById(id);
-
-        if (existing.isEmpty()) {
-            throw new IllegalArgumentException("Influencer not found");
+        Influencer existing = influencerRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Influencer not found"));
+        if (!existing.getSocialHandle().equals(influencer.getSocialHandle()) && influencerRepository.findBySocialHandle(influencer.getSocialHandle()).isPresent()) {
+            throw new IllegalArgumentException("Duplicate social handle exists");
         }
-
-        Influencer old = existing.get();
-
-        if (!old.getSocialHandle().equals(influencer.getSocialHandle())
-                && influencerRepository.existsBySocialHandle(influencer.getSocialHandle())) {
-            throw new IllegalArgumentException("Duplicate socialHandle not allowed");
-        }
-
-        old.setName(influencer.getName());
-        old.setSocialHandle(influencer.getSocialHandle());
-        old.setEmail(influencer.getEmail());
-        old.setActive(influencer.getActive());
-
-        return influencerRepository.save(old);
+        existing.setName(influencer.getName());
+        existing.setSocialHandle(influencer.getSocialHandle());
+        existing.setEmail(influencer.getEmail());
+        return influencerRepository.save(existing);
     }
 
     @Override
     public Influencer getInfluencerById(Long id) {
-        return influencerRepository.findById(id).orElse(null);
+        return influencerRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Influencer not found"));
     }
 
     @Override
@@ -60,9 +53,6 @@ public class InfluencerServiceImpl implements InfluencerService {
     @Override
     public void deactivateInfluencer(Long id) {
         Influencer influencer = getInfluencerById(id);
-        if (influencer == null) {
-            throw new IllegalArgumentException("Influencer not found");
-        }
         influencer.setActive(false);
         influencerRepository.save(influencer);
     }
