@@ -1,80 +1,58 @@
 package com.example.demo.service.impl;
-
-import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.model.Influencer;
+import com.example.demo.repository.InfluencerRepository;
 import com.example.demo.service.InfluencerService;
 
 @Service
 public class InfluencerServiceImpl implements InfluencerService {
 
-    private final List<Influencer> influencers = new ArrayList<>();
-    private final AtomicLong idGenerator = new AtomicLong(1L);
+    @Autowired
+    private InfluencerRepository influencerRepository;
 
     @Override
     public Influencer createInfluencer(Influencer influencer) {
-        // Duplicate username check
-        boolean duplicate = influencers.stream()
-                .anyMatch(i -> i.getUsername().equals(influencer.getUsername()));
-        if (duplicate) {
-            throw new IllegalArgumentException("Duplicate username not allowed");
+        if (influencerRepository.existsBySocialHandle(influencer.getSocialHandle())) {
+            throw new IllegalArgumentException("Duplicate socialHandle not allowed");
         }
-
-        influencer.setId(idGenerator.getAndIncrement());
-        influencer.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-        influencer.setActive(true);
-        influencers.add(influencer);
-        return influencer;
+        return influencerRepository.save(influencer);
     }
 
     @Override
     public Influencer updateInfluencer(Long id, Influencer influencer) {
-        Influencer existing = getInfluencerById(id);
-        if (existing == null) {
-            return null;
+        Optional<Influencer> existing = influencerRepository.findById(id);
+        if (existing.isPresent()) {
+            Influencer old = existing.get();
+            old.setName(influencer.getName());
+            old.setSocialHandle(influencer.getSocialHandle());
+            old.setEmail(influencer.getEmail());
+            old.setActive(influencer.getActive());
+            old.setCreatedAt(influencer.getCreatedAt());
+            return influencerRepository.save(old);
         }
-
-        // Duplicate username check (except current one)
-        boolean duplicate = influencers.stream()
-                .anyMatch(i -> !i.getId().equals(id) && i.getUsername().equals(influencer.getUsername()));
-        if (duplicate) {
-            throw new IllegalArgumentException("Duplicate username not allowed");
-        }
-
-        existing.setUsername(influencer.getUsername());
-        existing.setFullName(influencer.getFullName());
-        existing.setNiche(influencer.getNiche());
-        existing.setPlatform(influencer.getPlatform());
-        existing.setProfileUrl(influencer.getProfileUrl());
-        existing.setActive(influencer.getActive());
-        // createdAt unchanged
-
-        return existing;
+        return null;
     }
 
     @Override
     public Influencer getInfluencerById(Long id) {
-        return influencers.stream()
-                .filter(i -> i.getId().equals(id))
-                .findFirst()
-                .orElse(null);
+        Optional<Influencer> influencer = influencerRepository.findById(id);
+        return influencer.orElse(null);
     }
 
     @Override
     public List<Influencer> getAllInfluencers() {
-        return new ArrayList<>(influencers);
+        return influencerRepository.findAll();
     }
 
     @Override
     public void deactivateInfluencer(Long id) {
         Influencer influencer = getInfluencerById(id);
-        if (influencer != null) {
-            influencer.setActive(false);
-        }
+        influencer.setActive(false);
+        influencerRepository.save(influencer);
     }
 }
