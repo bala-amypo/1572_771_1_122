@@ -1,96 +1,73 @@
-// src/main/java/com/example/demo/model/Influencer.java
 package com.example.demo.model;
 
 import java.sql.Timestamp;
 
-import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Column;
-import jakarta.persistence.PrePersist;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
-@Entity
 public class Influencer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    @NotBlank(message = "Username is required")
+    private String username;
 
-    @Column(unique = true, nullable = false)
-    private String socialHandle;
+    @NotBlank(message = "Full name is required")
+    private String fullName;
 
-    private String email;
+    private String niche; // e.g., fashion, fitness, tech
 
-    private Boolean active;
+    @NotBlank(message = "Platform is required")
+    private String platform; // e.g., Instagram, TikTok, YouTube
 
+    private String profileUrl;
+
+    @NotNull
+    private Boolean active = true;
+
+    @GeneratedValue // Note: Timestamp will be set manually or via DB default
     private Timestamp createdAt;
 
     public Influencer() {}
 
-    public Influencer(String name, String socialHandle, String email, Boolean active, Timestamp createdAt) {
-        this.name = name;
-        this.socialHandle = socialHandle;
-        this.email = email;
+    public Influencer(String username, String fullName, String niche, String platform,
+                      String profileUrl, Boolean active, Timestamp createdAt) {
+        this.username = username;
+        this.fullName = fullName;
+        this.niche = niche;
+        this.platform = platform;
+        this.profileUrl = profileUrl;
         this.active = active;
         this.createdAt = createdAt;
     }
 
-    @PrePersist
-    protected void onCreate() {
-        this.createdAt = new Timestamp(System.currentTimeMillis());
-        if (this.active == null) {
-            this.active = true;
-        }
-    }
+    // Getters and Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public Long getId() {
-        return id;
-    }
+    public String getUsername() { return username; }
+    public void setUsername(String username) { this.username = username; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public String getFullName() { return fullName; }
+    public void setFullName(String fullName) { this.fullName = fullName; }
 
-    public String getName() {
-        return name;
-    }
+    public String getNiche() { return niche; }
+    public void setNiche(String niche) { this.niche = niche; }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    public String getPlatform() { return platform; }
+    public void setPlatform(String platform) { this.platform = platform; }
 
-    public String getSocialHandle() {
-        return socialHandle;
-    }
+    public String getProfileUrl() { return profileUrl; }
+    public void setProfileUrl(String profileUrl) { this.profileUrl = profileUrl; }
 
-    public void setSocialHandle(String socialHandle) {
-        this.socialHandle = socialHandle;
-    }
+    public Boolean getActive() { return active; }
+    public void setActive(Boolean active) { this.active = active; }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public Boolean getActive() {
-        return active;
-    }
-
-    public void setActive(Boolean active) {
-        this.active = active;
-    }
-
-    public Timestamp getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Timestamp createdAt) {
-        this.createdAt = createdAt;
-    }
+    public Timestamp getCreatedAt() { return createdAt; }
+    public void setCreatedAt(Timestamp createdAt) { this.createdAt = createdAt; }
 }
