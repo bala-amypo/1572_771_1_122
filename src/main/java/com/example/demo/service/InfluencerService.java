@@ -1,14 +1,17 @@
 package com.example.demo.service;
 
 import java.util.List;
-
 import com.example.demo.model.Influencer;
 
 public interface InfluencerService {
 
-    Influencer createInfluencer(Influencer influencer);
+    Influencer creatInfluencer(Influencer influencer);
+
+    Influencer updatInfluencer(Long id, Influencer influencer);
+
+    Influencer getInfluencerById(Long id);
 
     List<Influencer> getAllInfluencers();
 
-    Influencer getInfluencerById(Long id);
+    void deactivateInfluencer(Long id);
 }
