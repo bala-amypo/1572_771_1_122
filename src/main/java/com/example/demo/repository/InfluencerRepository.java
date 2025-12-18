@@ -9,4 +9,5 @@ import com.example.demo.model.Influencer;
 public interface InfluencerRepository extends JpaRepository<Influencer, Long> {
 
     boolean existsBySocialHandle(String socialHandle);
+
 }
