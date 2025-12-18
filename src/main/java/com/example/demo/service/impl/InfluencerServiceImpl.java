@@ -1,13 +1,13 @@
-package com.example.R.service.impl;
+package com.example.demo.service.impl;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.ROI.model.Influencer;
-import com.example.ROI.repository.InfluencerRepository;
-import com.example.ROI.service.InfluencerService;
+import com.example.demo.model.Influencer;
+import com.example.demo.repository.InfluencerRepository;
+import com.example.demo.service.InfluencerService;
 
 @Service
 public class InfluencerServiceImpl implements InfluencerService {
