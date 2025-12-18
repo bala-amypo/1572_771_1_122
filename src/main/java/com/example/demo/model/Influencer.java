@@ -1,4 +1,4 @@
-package com.example.ROI.model;
+package com.example.demo.model;
 
 import java.sql.Timestamp;
 
