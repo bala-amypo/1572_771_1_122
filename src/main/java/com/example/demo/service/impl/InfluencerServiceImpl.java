@@ -1,3 +1,14 @@
+package com.example.demo.service.impl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.example.demo.model.Influencer;
+import com.example.demo.repository.InfluencerRepository;
+import com.example.demo.service.InfluencerService;
+
 @Service
 public class InfluencerServiceImpl implements InfluencerService {
 
@@ -16,6 +27,7 @@ public class InfluencerServiceImpl implements InfluencerService {
 
         existing.setName(influencer.getName());
         existing.setActive(influencer.getActive());
+
         return influencerRepository.save(existing);
     }
 
