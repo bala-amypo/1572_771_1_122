@@ -1,13 +1,13 @@
-package com.example.demo.service.impl;
-
+package com.example.R.service.impl;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.model.Influencer;
-import com.example.demo.repository.InfluencerRepository;
-import com.example.demo.service.InfluencerService;
+import com.example.ROI.model.Influencer;
+import com.example.ROI.repository.InfluencerRepository;
+import com.example.ROI.service.InfluencerService;
 
 @Service
 public class InfluencerServiceImpl implements InfluencerService {
@@ -16,25 +16,32 @@ public class InfluencerServiceImpl implements InfluencerService {
     private InfluencerRepository influencerRepository;
 
     @Override
-    public Influencer creatInfluencer(Influencer influencer) {
+    public Influencer createInfluencer(Influencer influencer) {
+        if (influencerRepository.existsBySocialHandle(influencer.getSocialHandle())) {
+            throw new IllegalArgumentException("Duplicate socialHandle not allowed");
+        }
         return influencerRepository.save(influencer);
     }
 
     @Override
-    public Influencer updatInfluencer(Long id, Influencer influencer) {
-        Influencer existing = influencerRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Influencer not found with id: " + id));
-
-        existing.setName(influencer.getName());
-        existing.setActive(influencer.getActive());
-
-        return influencerRepository.save(existing);
+    public Influencer updateInfluencer(Long id, Influencer influencer) {
+        Optional<Influencer> existing = influencerRepository.findById(id);
+        if (existing.isPresent()) {
+            Influencer old = existing.get();
+            old.setName(influencer.getName());
+            old.setSocialHandle(influencer.getSocialHandle());
+            old.setEmail(influencer.getEmail());
+            old.setActive(influencer.getActive());
+            old.setCreatedAt(influencer.getCreatedAt());
+            return influencerRepository.save(old);
+        }
+        return null;
     }
 
     @Override
     public Influencer getInfluencerById(Long id) {
-        return influencerRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Influencer not found with id: " + id));
+        Optional<Influencer> influencer = influencerRepository.findById(id);
+        return influencer.orElse(null);
     }
 
     @Override
@@ -44,9 +51,7 @@ public class InfluencerServiceImpl implements InfluencerService {
 
     @Override
     public void deactivateInfluencer(Long id) {
-        Influencer influencer = influencerRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Influencer not found with id: " + id));
-
+        Influencer influencer = getInfluencerById(id);
         influencer.setActive(false);
         influencerRepository.save(influencer);
     }
