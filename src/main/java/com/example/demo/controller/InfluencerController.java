@@ -15,25 +15,25 @@ public class InfluencerController {
     @Autowired
     private InfluencerService influencerService;
 
-    // Get all influencers
+    
     @GetMapping
     public List<Influencer> getAllInfluencers() {
         return influencerService.getAllInfluencers();
     }
 
-    // Create new influencer
+   
     @PostMapping
     public Influencer createInfluencer(@RequestBody Influencer influencer) {
         return influencerService.creatInfluencer(influencer);
     }
 
-    // Get influencer by ID
+   
     @GetMapping("/{id}")
     public Influencer getInfluencerById(@PathVariable Long id) {
         return influencerService.getInfluencerById(id);
     }
 
-    // Update influencer
+   
     @PutMapping("/{id}")
     public Influencer updateInfluencer(
             @PathVariable Long id,
@@ -42,7 +42,6 @@ public class InfluencerController {
         return influencerService.updatInfluencer(id, influencer);
     }
 
-    // Deactivate influencer
     @PutMapping("/{id}/deactivate")
     public String deactivateInfluencer(@PathVariable Long id) {
         influencerService.deactivateInfluencer(id);
