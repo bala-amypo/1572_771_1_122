@@ -1,63 +1,67 @@
 package com.example.demo.service.impl;
 
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.concurrent.atomic.AtomicLong;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.model.Influencer;
-import com.example.demo.repository.InfluencerRepository;
 import com.example.demo.service.InfluencerService;
 
 @Service
 public class InfluencerServiceImpl implements InfluencerService {
 
-    @Autowired
-    private InfluencerRepository influencerRepository;
+    private final List<Influencer> influencers = new ArrayList<>();
+    private final AtomicLong idGenerator = new AtomicLong(1);
 
     @Override
     public Influencer createInfluencer(Influencer influencer) {
-        if (influencerRepository.existsByUsername(influencer.getUsername())) {
+        // Check duplicate username
+        if (influencers.stream().anyMatch(i -> i.getUsername().equals(influencer.getUsername()))) {
             throw new IllegalArgumentException("Duplicate username not allowed");
         }
-        return influencerRepository.save(influencer);
+        influencer.setId(idGenerator.getAndIncrement());
+        influencer.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+        influencer.setActive(true);
+        influencers.add(influencer);
+        return influencer;
     }
 
     @Override
     public Influencer updateInfluencer(Long id, Influencer influencer) {
-        Optional<Influencer> existingOpt = influencerRepository.findById(id);
-        if (existingOpt.isPresent()) {
-            Influencer old = existingOpt.get();
+        Influencer existing = getInfluencerById(id);
+        if (existing == null) return null;
 
-            // Prevent duplicate username on update (except for itself)
-            if (!old.getUsername().equals(influencer.getUsername()) &&
-                influencerRepository.existsByUsername(influencer.getUsername())) {
-                throw new IllegalArgumentException("Duplicate username not allowed");
-            }
-
-            old.setUsername(influencer.getUsername());
-            old.setFullName(influencer.getFullName());
-            old.setNiche(influencer.getNiche());
-            old.setPlatform(influencer.getPlatform());
-            old.setProfileUrl(influencer.getProfileUrl());
-            old.setActive(influencer.getActive());
-            old.setCreatedAt(influencer.getCreatedAt());
-
-            return influencerRepository.save(old);
+        // Check duplicate username (except itself)
+        if (!existing.getUsername().equals(influencer.getUsername()) &&
+            influencers.stream().anyMatch(i -> i.getUsername().equals(influencer.getUsername()))) {
+            throw new IllegalArgumentException("Duplicate username not allowed");
         }
-        return null;
+
+        existing.setUsername(influencer.getUsername());
+        existing.setFullName(influencer.getFullName());
+        existing.setNiche(influencer.getNiche());
+        existing.setPlatform(influencer.getPlatform());
+        existing.setProfileUrl(influencer.getProfileUrl());
+        existing.setActive(influencer.getActive());
+        // createdAt remains unchanged
+
+        return existing;
     }
 
     @Override
     public Influencer getInfluencerById(Long id) {
-        Optional<Influencer> influencerOpt = influencerRepository.findById(id);
-        return influencerOpt.orElse(null);
+        return influencers.stream()
+                .filter(i -> i.getId().equals(id))
+                .findFirst()
+                .orElse(null);
     }
 
     @Override
     public List<Influencer> getAllInfluencers() {
-        return influencerRepository.findAll();
+        return new ArrayList<>(influencers);
     }
 
     @Override
@@ -65,7 +69,6 @@ public class InfluencerServiceImpl implements InfluencerService {
         Influencer influencer = getInfluencerById(id);
         if (influencer != null) {
             influencer.setActive(false);
-            influencerRepository.save(influencer);
         }
     }
 }
