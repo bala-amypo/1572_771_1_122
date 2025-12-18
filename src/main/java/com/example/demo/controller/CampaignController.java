@@ -1,4 +1,4 @@
-package com.example.ROI.controller;
+package com.example.demo.controller;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import com.example.ROI.model.Campaign;
-import com.example.ROI.service.CampaignService;
+import com.example.demo.model.Campaign;
+import com.example.demo.service.CampaignService;
 
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
