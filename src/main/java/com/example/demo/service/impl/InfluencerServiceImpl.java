@@ -14,14 +14,17 @@ import com.example.demo.service.InfluencerService;
 public class InfluencerServiceImpl implements InfluencerService {
 
     private final List<Influencer> influencers = new ArrayList<>();
-    private final AtomicLong idGenerator = new AtomicLong(1);
+    private final AtomicLong idGenerator = new AtomicLong(1L);
 
     @Override
     public Influencer createInfluencer(Influencer influencer) {
-        // Check duplicate username
-        if (influencers.stream().anyMatch(i -> i.getUsername().equals(influencer.getUsername()))) {
+        // Duplicate username check
+        boolean duplicate = influencers.stream()
+                .anyMatch(i -> i.getUsername().equals(influencer.getUsername()));
+        if (duplicate) {
             throw new IllegalArgumentException("Duplicate username not allowed");
         }
+
         influencer.setId(idGenerator.getAndIncrement());
         influencer.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         influencer.setActive(true);
@@ -32,11 +35,14 @@ public class InfluencerServiceImpl implements InfluencerService {
     @Override
     public Influencer updateInfluencer(Long id, Influencer influencer) {
         Influencer existing = getInfluencerById(id);
-        if (existing == null) return null;
+        if (existing == null) {
+            return null;
+        }
 
-        // Check duplicate username (except itself)
-        if (!existing.getUsername().equals(influencer.getUsername()) &&
-            influencers.stream().anyMatch(i -> i.getUsername().equals(influencer.getUsername()))) {
+        // Duplicate username check (except current one)
+        boolean duplicate = influencers.stream()
+                .anyMatch(i -> !i.getId().equals(id) && i.getUsername().equals(influencer.getUsername()));
+        if (duplicate) {
             throw new IllegalArgumentException("Duplicate username not allowed");
         }
 
@@ -46,7 +52,7 @@ public class InfluencerServiceImpl implements InfluencerService {
         existing.setPlatform(influencer.getPlatform());
         existing.setProfileUrl(influencer.getProfileUrl());
         existing.setActive(influencer.getActive());
-        // createdAt remains unchanged
+        // createdAt unchanged
 
         return existing;
     }
