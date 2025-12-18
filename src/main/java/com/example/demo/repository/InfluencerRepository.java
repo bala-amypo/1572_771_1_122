@@ -10,6 +10,5 @@ import com.example.demo.model.Influencer;
 @Repository
 public interface InfluencerRepository extends JpaRepository<Influencer, Long> {
 
-    // Used to check uniqueness of socialHandle
     Optional<Influencer> findBySocialHandle(String socialHandle);
 }
