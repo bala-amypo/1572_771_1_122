@@ -1,12 +1,12 @@
-package com.example.demo.service;
+package com.example.demo.repository;
 
-import java.util.List;
+import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
+
 import com.example.demo.model.Influencer;
 
-public interface InfluencerService {
-    Influencer createInfluencer(Influencer influencer);
-    Influencer updateInfluencer(Long id, Influencer influencer);
-    Influencer getInfluencerById(Long id);
-    List<Influencer> getAllInfluencers();
-    void deactivateInfluencer(Long id);
+@Repository
+public interface InfluencerRepository extends JpaRepository<Influencer, Long> {
+
+boolean existsBySocialHandle(String socialHandle);
 }
