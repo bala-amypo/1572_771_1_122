@@ -1,4 +1,5 @@
 package com.example.demo.service.impl;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -26,22 +27,29 @@ public class InfluencerServiceImpl implements InfluencerService {
     @Override
     public Influencer updateInfluencer(Long id, Influencer influencer) {
         Optional<Influencer> existing = influencerRepository.findById(id);
-        if (existing.isPresent()) {
-            Influencer old = existing.get();
-            old.setName(influencer.getName());
-            old.setSocialHandle(influencer.getSocialHandle());
-            old.setEmail(influencer.getEmail());
-            old.setActive(influencer.getActive());
-            old.setCreatedAt(influencer.getCreatedAt());
-            return influencerRepository.save(old);
+
+        if (existing.isEmpty()) {
+            throw new IllegalArgumentException("Influencer not found");
         }
-        return null;
+
+        Influencer old = existing.get();
+
+        if (!old.getSocialHandle().equals(influencer.getSocialHandle())
+                && influencerRepository.existsBySocialHandle(influencer.getSocialHandle())) {
+            throw new IllegalArgumentException("Duplicate socialHandle not allowed");
+        }
+
+        old.setName(influencer.getName());
+        old.setSocialHandle(influencer.getSocialHandle());
+        old.setEmail(influencer.getEmail());
+        old.setActive(influencer.getActive());
+
+        return influencerRepository.save(old);
     }
 
     @Override
     public Influencer getInfluencerById(Long id) {
-        Optional<Influencer> influencer = influencerRepository.findById(id);
-        return influencer.orElse(null);
+        return influencerRepository.findById(id).orElse(null);
     }
 
     @Override
@@ -52,6 +60,9 @@ public class InfluencerServiceImpl implements InfluencerService {
     @Override
     public void deactivateInfluencer(Long id) {
         Influencer influencer = getInfluencerById(id);
+        if (influencer == null) {
+            throw new IllegalArgumentException("Influencer not found");
+        }
         influencer.setActive(false);
         influencerRepository.save(influencer);
     }
