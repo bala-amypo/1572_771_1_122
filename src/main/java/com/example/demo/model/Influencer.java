@@ -2,14 +2,12 @@ package com.example.demo.model;
 
 import java.sql.Timestamp;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Column;
 import jakarta.persistence.PrePersist;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 
 @Entity
 public class Influencer {
@@ -18,17 +16,14 @@ public class Influencer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
     private String name;
 
-    @Column(unique = true)
-    @NotBlank
+    @Column(unique = true, nullable = false)
     private String socialHandle;
 
-    @Email
     private String email;
 
-    private Boolean active = true;
+    private Boolean active;
 
     private Timestamp createdAt;
 
@@ -40,6 +35,14 @@ public class Influencer {
         this.email = email;
         this.active = active;
         this.createdAt = createdAt;
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = new Timestamp(System.currentTimeMillis());
+        if (this.active == null) {
+            this.active = true;
+        }
     }
 
     public Long getId() {
@@ -88,12 +91,5 @@ public class Influencer {
 
     public void setCreatedAt(Timestamp createdAt) {
         this.createdAt = createdAt;
-    }
-
-    @PrePersist
-    protected void onCreate() {
-        if (createdAt == null) {
-            createdAt = new Timestamp(System.currentTimeMillis());
-        }
     }
 }
