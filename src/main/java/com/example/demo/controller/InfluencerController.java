@@ -3,7 +3,14 @@ package com.example.demo.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.model.Influencer;
 import com.example.demo.service.InfluencerService;
@@ -15,14 +22,21 @@ public class InfluencerController {
     @Autowired
     private InfluencerService influencerService;
 
-    @GetMapping
-    public List<Influencer> getAllInfluencers() {
-        return influencerService.getAllInfluencers();
-    }
-
     @PostMapping
     public Influencer createInfluencer(@RequestBody Influencer influencer) {
-        return influencerService.creatInfluencer(influencer);
+        return influencerService.createInfluencer(influencer);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<String> updateInfluencer(
+            @PathVariable Long id,
+            @RequestBody Influencer influencer) {
+
+        Influencer updated = influencerService.updateInfluencer(id, influencer);
+        if (updated != null) {
+            return ResponseEntity.ok("Influencer updated successfully");
+        }
+        return ResponseEntity.badRequest().body("Influencer not found");
     }
 
     @GetMapping("/{id}")
@@ -30,16 +44,14 @@ public class InfluencerController {
         return influencerService.getInfluencerById(id);
     }
 
-    @PutMapping("/{id}")
-    public Influencer updateInfluencer(
-            @PathVariable Long id,
-            @RequestBody Influencer influencer) {
-        return influencerService.updatInfluencer(id, influencer);
+    @GetMapping
+    public List<Influencer> getAllInfluencers() {
+        return influencerService.getAllInfluencers();
     }
 
     @PutMapping("/{id}/deactivate")
-    public String deactivateInfluencer(@PathVariable Long id) {
+    public ResponseEntity<String> deactivateInfluencer(@PathVariable Long id) {
         influencerService.deactivateInfluencer(id);
-        return "Influencer deactivated successfully";
+        return ResponseEntity.ok("Influencer deactivated");
     }
 }
