@@ -2,49 +2,18 @@ package com.example.demo.model;
 
 import java.sql.Timestamp;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-
 public class Influencer {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @NotBlank(message = "Username is required")
     private String username;
-
-    @NotBlank(message = "Full name is required")
     private String fullName;
-
-    private String niche; // e.g., fashion, fitness, tech
-
-    @NotBlank(message = "Platform is required")
-    private String platform; // e.g., Instagram, TikTok, YouTube
-
+    private String niche;
+    private String platform;
     private String profileUrl;
-
-    @NotNull
     private Boolean active = true;
-
-    @GeneratedValue // Note: Timestamp will be set manually or via DB default
     private Timestamp createdAt;
 
     public Influencer() {}
-
-    public Influencer(String username, String fullName, String niche, String platform,
-                      String profileUrl, Boolean active, Timestamp createdAt) {
-        this.username = username;
-        this.fullName = fullName;
-        this.niche = niche;
-        this.platform = platform;
-        this.profileUrl = profileUrl;
-        this.active = active;
-        this.createdAt = createdAt;
-    }
 
     // Getters and Setters
     public Long getId() { return id; }
