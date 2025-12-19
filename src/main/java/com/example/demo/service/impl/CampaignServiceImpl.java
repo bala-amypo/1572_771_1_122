@@ -14,7 +14,7 @@ import com.example.demo.service.CampaignService;
 public class CampaignServiceImpl implements CampaignService {
 
     @Autowired
-    CampaignRepository campaignRepository;
+    private CampaignRepository campaignRepository;
 
     @Override
     public Campaign createCampaign(Campaign campaign) {
@@ -28,19 +28,7 @@ public class CampaignServiceImpl implements CampaignService {
 
     @Override
     public Campaign getCampaignById(Long id) {
-        Optional<Campaign> optionalCampaign = campaignRepository.findById(id);
-        return optionalCampaign.orElse(null);
-    }
-
-    @Override
-    public boolean deactivateCampaign(Long id) {
-        if (campaignRepository.existsById(id)) {
-            Campaign campaign = campaignRepository.findById(id).get();
-            campaign.setActive(false);
-            campaignRepository.save(campaign);
-            return true;
-        }
-        return false;
+        return campaignRepository.findById(id).orElse(null);
     }
 
     @Override
@@ -56,5 +44,18 @@ public class CampaignServiceImpl implements CampaignService {
             return campaignRepository.save(oldCampaign);
         }
         return null;
+    }
+
+    @Override
+    public boolean deactivateCampaign(Long id) {
+        Optional<Campaign> optionalCampaign = campaignRepository.findById(id);
+
+        if (optionalCampaign.isPresent()) {
+            Campaign campaign = optionalCampaign.get();
+            campaign.setActive(false);
+            campaignRepository.save(campaign);
+            return true;
+        }
+        return false;
     }
 }
