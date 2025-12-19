@@ -1,86 +1,37 @@
-package com.example.demo.model;
+package com.example.demo.controller;
 
-import java.time.LocalDateTime;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
+import com.example.demo.model.User;
+import com.example.demo.service.UserService;
 
-@Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = "email"))
-public class User {
+@RestController
+@RequestMapping("/api/auth")
+public class AuthController {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Autowired
+    UserService userService;
 
-    private String name;
-
-    private String email;
-
-    private String password;
-
-    private String role = "USER";
-
-    private LocalDateTime createdAt;
-
-    @PrePersist
-    public void onCreate() {
-        this.createdAt = LocalDateTime.now();
+    @PostMapping("/register")
+    public ResponseEntity<User> register(@RequestBody User user) {
+        User u = userService.createUser(user);
+        return ResponseEntity.status(201).body(u);
     }
 
-    public User() {
-    }
+    
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody User user) {
 
-    public Long getId() {
-        return id;
-    }
+        User existingUser = userService.findByEmail(user.getEmail());
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+        if (existingUser != null &&
+            existingUser.getPassword().equals(user.getPassword())) {
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
- 
-    public void setPassword(String password) {
-        this.password = password;
-    }
- 
-    public String getRole() {
-        return role;
-    }
- 
-    public void setRole(String role) {
-        this.role = role;
-    }
- 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
- 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
+            return ResponseEntity.status(200).body("Login Successful");
+        } else {
+            return ResponseEntity.status(401).body("Invalid Email or Password");
+        }
     }
 }
