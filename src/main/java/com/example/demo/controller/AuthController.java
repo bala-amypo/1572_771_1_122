@@ -8,7 +8,7 @@ import com.example.demo.model.User;
 import com.example.demo.service.UserService;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/auth")
 public class AuthController {
 
     @Autowired
@@ -16,11 +16,10 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<User> register(@RequestBody User user) {
-        User u = userService.createUser(user);
-        return ResponseEntity.status(201).body(u);
+        User savedUser = userService.registerUser(user);
+        return ResponseEntity.status(201).body(savedUser);
     }
 
-    
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody User user) {
 
