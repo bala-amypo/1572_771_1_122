@@ -14,7 +14,7 @@ import com.example.demo.service.DiscountCodeService;
 public class DiscountCodeServiceImpl implements DiscountCodeService {
 
     @Autowired
-    DiscountCodeRepository discountCodeRepository;
+    private DiscountCodeRepository discountCodeRepository;
 
     @Override
     public DiscountCode createDiscountCode(DiscountCode code) {
@@ -23,24 +23,12 @@ public class DiscountCodeServiceImpl implements DiscountCodeService {
 
     @Override
     public DiscountCode getCodeById(Long id) {
-        Optional<DiscountCode> optionalCode = discountCodeRepository.findById(id);
-        return optionalCode.orElse(null);
+        return discountCodeRepository.findById(id).orElse(null);
     }
 
     @Override
     public List<DiscountCode> getAllCodes() {
         return discountCodeRepository.findAll();
-    }
-
-    @Override
-    public boolean deactivateCode(Long id) {
-        if (discountCodeRepository.existsById(id)) {
-            DiscountCode code = discountCodeRepository.findById(id).get();
-            code.setActive(false);
-            discountCodeRepository.save(code);
-            return true;
-        }
-        return false;
     }
 
     @Override
@@ -59,22 +47,25 @@ public class DiscountCodeServiceImpl implements DiscountCodeService {
     }
 
     @Override
-    public DiscountCode creaDiscountCode(DiscountCode code) {
-        throw new UnsupportedOperationException("Unimplemented method 'creaDiscountCode'");
+    public boolean deactivateCode(Long id) {
+        Optional<DiscountCode> optionalCode = discountCodeRepository.findById(id);
+
+        if (optionalCode.isPresent()) {
+            DiscountCode code = optionalCode.get();
+            code.setActive(false);
+            discountCodeRepository.save(code);
+            return true;
+        }
+        return false;
     }
 
     @Override
-    public DiscountCode updaDiscountCode(Long id, DiscountCode code) {
-        throw new UnsupportedOperationException("Unimplemented method 'updaDiscountCode'");
+    public List<DiscountCode> getCodesByInfluencer(Long influencerId) {
+        return discountCodeRepository.findByInfluencerId(influencerId);
     }
 
     @Override
-    public DiscountCode getCodesByInfluencer(Long influencerId) {
-        throw new UnsupportedOperationException("Unimplemented method 'getCodesByInfluencer'");
-    }
-
-    @Override
-    public DiscountCode getCodesByCampaign(Long campaignId) {
-        throw new UnsupportedOperationException("Unimplemented method 'getCodesByCampaign'");
+    public List<DiscountCode> getCodesByCampaign(Long campaignId) {
+        return discountCodeRepository.findByCampaignId(campaignId);
     }
 }
