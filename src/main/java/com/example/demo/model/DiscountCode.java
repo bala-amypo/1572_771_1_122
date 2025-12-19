@@ -12,11 +12,13 @@ public class DiscountCode {
 
     private String code;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "influencer_id")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Influencer influencer;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "campaign_id")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Campaign campaign;
 
@@ -26,54 +28,20 @@ public class DiscountCode {
     @Column(columnDefinition = "bit(1)")
     private Boolean active = true;
 
-    public DiscountCode() {
-    }
+    public DiscountCode() {}
 
-    public Long getId() {
-        return id;
-    }
+    // getters and setters
+    public Long getId() { return id; }
+    public String getCode() { return code; }
+    public Influencer getInfluencer() { return influencer; }
+    public Campaign getCampaign() { return campaign; }
+    public Double getDiscountPercentage() { return discountPercentage; }
+    public Boolean getActive() { return active; }
 
-    public String getCode() {
-        return code;
-    }
-
-    public Influencer getInfluencer() {
-        return influencer;
-    }
-
-    public Campaign getCampaign() {
-        return campaign;
-    }
-
-    public Double getDiscountPercentage() {
-        return discountPercentage;
-    }
-
-    public Boolean getActive() {
-        return active;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public void setInfluencer(Influencer influencer) {
-        this.influencer = influencer;
-    }
-
-    public void setCampaign(Campaign campaign) {
-        this.campaign = campaign;
-    }
-
-    public void setDiscountPercentage(Double discountPercentage) {
-        this.discountPercentage = discountPercentage;
-    }
-
-    public void setActive(Boolean active) {
-        this.active = active;
-    }
+    public void setId(Long id) { this.id = id; }
+    public void setCode(String code) { this.code = code; }
+    public void setInfluencer(Influencer influencer) { this.influencer = influencer; }
+    public void setCampaign(Campaign campaign) { this.campaign = campaign; }
+    public void setDiscountPercentage(Double discountPercentage) { this.discountPercentage = discountPercentage; }
+    public void setActive(Boolean active) { this.active = active; }
 }
