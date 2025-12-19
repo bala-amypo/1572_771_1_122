@@ -6,24 +6,37 @@ import java.time.LocalDate;
 import jakarta.persistence.*;
 
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = "campaignName"))
+@Table(
+    name = "campaign",
+    uniqueConstraints = @UniqueConstraint(columnNames = "campaign_name")
+)
 public class Campaign {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "campaign_name", nullable = false, unique = true)
     private String campaignName;
 
+    @Column(name = "start_date")
     private LocalDate startDate;
 
+    @Column(name = "end_date")
     private LocalDate endDate;
 
+    @Column(precision = 38, scale = 2)
     private BigDecimal budget;
 
+    @Column(columnDefinition = "bit(1)")
     private Boolean active = true;
 
-    public Campaign(String campaignName, LocalDate startDate, LocalDate endDate, BigDecimal budget, Boolean active) {
+    // ✅ REQUIRED: No-args constructor
+    public Campaign() {
+    }
+
+    public Campaign(String campaignName, LocalDate startDate,
+                    LocalDate endDate, BigDecimal budget, Boolean active) {
         this.campaignName = campaignName;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -31,6 +44,7 @@ public class Campaign {
         this.active = active;
     }
 
+    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -78,6 +92,4 @@ public class Campaign {
     public void setActive(Boolean active) {
         this.active = active;
     }
-
-
 }
