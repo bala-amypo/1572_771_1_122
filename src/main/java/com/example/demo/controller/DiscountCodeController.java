@@ -14,44 +14,45 @@ import com.example.demo.service.DiscountCodeService;
 public class DiscountCodeController {
 
     @Autowired
-    DiscountCodeService discountCodeService;
+    private DiscountCodeService discountCodeService;
 
     @GetMapping
-    public List<DiscountCode> getAll() {
-        return discountCodeService.getAllCodes();
+    public ResponseEntity<List<DiscountCode>> getAll() {
+        return ResponseEntity.ok(discountCodeService.getAllCodes());
     }
 
     @PostMapping
-    public ResponseEntity<DiscountCode> createAll(@RequestBody DiscountCode code) {
-        DiscountCode dc = discountCodeService.createDiscountCode(code);
-        return ResponseEntity.status(201).body(dc);
+    public ResponseEntity<DiscountCode> create(@RequestBody DiscountCode code) {
+        return ResponseEntity.status(201)
+                .body(discountCodeService.createDiscountCode(code));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<DiscountCode> getById(@PathVariable Long id) {
-        DiscountCode dc = discountCodeService.getCodeById(id);
-        return ResponseEntity.status(200).body(dc);
+        DiscountCode code = discountCodeService.getCodeById(id);
+        if (code != null) {
+            return ResponseEntity.ok(code);
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> putAll(
+    public ResponseEntity<String> update(
             @PathVariable Long id,
             @RequestBody DiscountCode code) {
 
-        if (discountCodeService.updaDiscountCode(id, code) != null) {
-            return ResponseEntity.status(201).body("Successful");
-        } else {
-            return ResponseEntity.status(404).build();
+        DiscountCode updated = discountCodeService.updateDiscountCode(id, code);
+        if (updated != null) {
+            return ResponseEntity.ok("Updated Successfully");
         }
+        return ResponseEntity.notFound().build();
     }
 
     @PutMapping("/{id}/deactivate")
     public ResponseEntity<String> deactivate(@PathVariable Long id) {
-        boolean isDeactivated = discountCodeService.deactivateCode(id);
-        if (isDeactivated) {
-            return ResponseEntity.status(201).body("Successful");
-        } else {
-            return ResponseEntity.status(404).build();
+        if (discountCodeService.deactivateCode(id)) {
+            return ResponseEntity.ok("Deactivated Successfully");
         }
+        return ResponseEntity.notFound().build();
     }
 }
