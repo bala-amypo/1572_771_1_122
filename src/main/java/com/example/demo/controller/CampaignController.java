@@ -1,49 +1,57 @@
-// package com.example.demo.controller;
+package com.example.demo.controller;
 
-// import java.util.List;
-// import java.util.ArrayList;
+import java.util.List;
 
-// import org.springframework.beans.factory.annotation.Autowired;
-// import org.springframework.web.bind.annotation.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-// import com.example.demo.model.Campaign;
-// import com.example.demo.service.CampaignService;
+import com.example.demo.model.Campaign;
+import com.example.demo.service.CampaignService;
 
-// import io.swagger.v3.oas.annotations.parameters.RequestBody;
+@RestController
+@RequestMapping("/api/campaigns")
+public class CampaignController {
 
-// @RestController
-// @RequestMapping("/api/campaigns")
-// public class CampaignController {
+    @Autowired
+    CampaignService campaignService;
 
-//     @Autowired
-//     CampaignService campaignService;
+    @GetMapping
+    public List<Campaign> getAll() {
+        return campaignService.getAllCampaigns();
+    }
 
-//     @GetMapping
-//     public List<Campaign> getAll() {
-//         return new ArrayList<>();
-//     }
+    @PostMapping
+    public ResponseEntity<Campaign> createAll(@RequestBody Campaign campaign) {
+        Campaign cp = campaignService.createCampaign(campaign);
+        return ResponseEntity.status(201).body(cp);
+    }
 
-//     @PostMapping
-//     public Campaign create(@RequestBody Campaign campaign) {
-//         return campaignService.createCampaign(campaign);
-//     }
+    @GetMapping("/{id}")
+    public ResponseEntity<Campaign> getById(@PathVariable Long id) {
+        Campaign cp = campaignService.getCampaignById(id);
+        return ResponseEntity.status(200).body(cp);
+    }
 
-//     @GetMapping("/{id}")
-//     public Campaign getById(@PathVariable Long id) {
-//         return campaignService.getCampaignById(id);
-//     }
+    @PutMapping("/{id}")
+    public ResponseEntity<String> putAll(
+            @PathVariable Long id,
+            @RequestBody Campaign campaign) {
 
-//     @PutMapping("/{id}")
-//     public String update(@PathVariable Long id, @RequestBody Campaign campaign) {
-//         if (campaignService.updateCampaign(id, campaign) != null) {
-//             return "Successful";
-//         }
-//         return "Not successful";
-//     }
+        if (campaignService.updateCampaign(id, campaign) != null) {
+            return ResponseEntity.status(201).body("Successful");
+        } else {
+            return ResponseEntity.status(404).build();
+        }
+    }
 
-//     @PutMapping("/{id}/deactivate")
-//     public String deactivate(@PathVariable Long id) {
-//         campaignService.deactivateCampaign(id);
-//         return "Successful";
-//     }
-// }
+    @PutMapping("/{id}/deactivate")
+    public ResponseEntity<String> deactivate(@PathVariable Long id) {
+        boolean isDeactivated = campaignService.deactivateCampaign(id);
+        if (isDeactivated) {
+            return ResponseEntity.status(201).body("Successful");
+        } else {
+            return ResponseEntity.status(404).build();
+        }
+    }
+}
