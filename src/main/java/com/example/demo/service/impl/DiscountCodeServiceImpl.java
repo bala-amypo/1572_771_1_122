@@ -6,8 +6,12 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.model.Campaign;
 import com.example.demo.model.DiscountCode;
+import com.example.demo.model.Influencer;
+import com.example.demo.repository.CampaignRepository;
 import com.example.demo.repository.DiscountCodeRepository;
+import com.example.demo.repository.InfluencerRepository;
 import com.example.demo.service.DiscountCodeService;
 
 @Service
@@ -15,6 +19,12 @@ public class DiscountCodeServiceImpl implements DiscountCodeService {
 
     @Autowired
     private DiscountCodeRepository discountCodeRepository;
+
+    @Autowired
+    private InfluencerRepository influencerRepository;
+
+    @Autowired
+    private CampaignRepository campaignRepository;
 
     @Override
     public DiscountCode createDiscountCode(DiscountCode code) {
@@ -33,17 +43,37 @@ public class DiscountCodeServiceImpl implements DiscountCodeService {
 
     @Override
     public DiscountCode updateDiscountCode(Long id, DiscountCode updatedCode) {
-        Optional<DiscountCode> optionalCode = discountCodeRepository.findById(id);
 
-        if (optionalCode.isPresent()) {
-            DiscountCode oldCode = optionalCode.get();
-            oldCode.setCode(updatedCode.getCode());
-            oldCode.setDiscountPercentage(updatedCode.getDiscountPercentage());
-            oldCode.setInfluencer(updatedCode.getInfluencer());
-            oldCode.setCampaign(updatedCode.getCampaign());
-            return discountCodeRepository.save(oldCode);
+        Optional<DiscountCode> optionalCode = discountCodeRepository.findById(id);
+        if (optionalCode.isEmpty()) {
+            return null;
         }
-        return null;
+
+        DiscountCode oldCode = optionalCode.get();
+        oldCode.setCode(updatedCode.getCode());
+        oldCode.setDiscountPercentage(updatedCode.getDiscountPercentage());
+
+        // ✅ Attach managed Influencer
+        if (updatedCode.getInfluencer() != null &&
+            updatedCode.getInfluencer().getId() != null) {
+
+            Influencer influencer = influencerRepository
+                    .findById(updatedCode.getInfluencer().getId())
+                    .orElse(null);
+            oldCode.setInfluencer(influencer);
+        }
+
+        // ✅ Attach managed Campaign
+        if (updatedCode.getCampaign() != null &&
+            updatedCode.getCampaign().getId() != null) {
+
+            Campaign campaign = campaignRepository
+                    .findById(updatedCode.getCampaign().getId())
+                    .orElse(null);
+            oldCode.setCampaign(campaign);
+        }
+
+        return discountCodeRepository.save(oldCode);
     }
 
     @Override
