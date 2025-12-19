@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.de.model.Influencer;
-import com.example.ROI.service.InfluencerService;
+import com.example.demo.model.Influencer;
+import com.example.demo.service.InfluencerService;
 
 @RestController
 @RequestMapping("/api/influencers")
