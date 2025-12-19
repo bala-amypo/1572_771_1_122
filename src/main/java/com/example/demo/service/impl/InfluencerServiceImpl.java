@@ -1,58 +1,46 @@
-// package com.example.demo.service.impl;
-// import java.util.List;
-// import java.util.Optional;
+package com.example.demo.service.impl;
 
-// import org.springframework.beans.factory.annotation.Autowired;
-// import org.springframework.stereotype.Service;
+import java.util.List;
 
-// import com.example.demo.model.Influencer;
-// import com.example.demo.repository.InfluencerRepository;
-// import com.example.demo.service.InfluencerService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-// @Service
-// public class InfluencerServiceImpl implements InfluencerService {
+import com.example.demo.model.Influencer;
+import com.example.demo.repository.InfluencerRepository;
+import com.example.demo.service.InfluencerService;
 
-//     @Autowired
-//     private InfluencerRepository influencerRepository;
+@Service
+public class InfluencerServiceImpl implements InfluencerService {
 
-//     @Override
-//     public Influencer createInfluencer(Influencer influencer) {
-//         if (influencerRepository.existsBySocialHandle(influencer.getSocialHandle())) {
-//             throw new IllegalArgumentException("Duplicate socialHandle not allowed");
-//         }
-//         return influencerRepository.save(influencer);
-//     }
+    @Autowired
+    private InfluencerRepository repository;
 
-//     @Override
-//     public Influencer updateInfluencer(Long id, Influencer influencer) {
-//         Optional<Influencer> existing = influencerRepository.findById(id);
-//         if (existing.isPresent()) {
-//             Influencer old = existing.get();
-//             old.setName(influencer.getName());
-//             old.setSocialHandle(influencer.getSocialHandle());
-//             old.setEmail(influencer.getEmail());
-//             old.setActive(influencer.getActive());
-//             old.setCreatedAt(influencer.getCreatedAt());
-//             return influencerRepository.save(old);
-//         }
-//         return null;
-//     }
+    public Influencer createInfluencer(Influencer influencer) {
+        return repository.save(influencer);
+    }
 
-//     @Override
-//     public Influencer getInfluencerById(Long id) {
-//         Optional<Influencer> influencer = influencerRepository.findById(id);
-//         return influencer.orElse(null);
-//     }
+    public Influencer updateInfluencer(Long id, Influencer influencer) {
+        return repository.findById(id).map(old -> {
+            old.setName(influencer.getName());
+            old.setEmail(influencer.getEmail());
+            old.setSocialHandle(influencer.getSocialHandle());
+            return repository.save(old);
+        }).orElse(null);
+    }
 
-//     @Override
-//     public List<Influencer> getAllInfluencers() {
-//         return influencerRepository.findAll();
-//     }
+    public Influencer getInfluencerById(Long id) {
+        return repository.findById(id).orElse(null);
+    }
 
-//     @Override
-//     public void deactivateInfluencer(Long id) {
-//         Influencer influencer = getInfluencerById(id);
-//         influencer.setActive(false);
-//         influencerRepository.save(influencer);
-//     }
-// }
+    public List<Influencer> getAllInfluencers() {
+        return repository.findAll();
+    }
+
+    public boolean deactivateInfluencer(Long id) {
+        return repository.findById(id).map(i -> {
+            i.setActive(false);
+            repository.save(i);
+            return true;
+        }).orElse(false);
+    }
+}
