@@ -1,101 +1,83 @@
-// package com.example.demo.model;
+package com.example.demo.model;
 
-// import java.math.BigDecimal;
-// import java.time.LocalDate;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 
-// import jakarta.persistence.*;
-// import jakarta.validation.constraints.NotBlank;
-// import jakarta.validation.constraints.NotNull;
-// import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.persistence.*;
 
-// @Entity
-// @Table(
-//     name = "campaigns",
-//     uniqueConstraints = @UniqueConstraint(columnNames = "campaign_name")
-// )
-// public class Campaign {
+@Entity
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = "campaignName"))
+public class Campaign {
 
-//     @Id
-//     @GeneratedValue(strategy = GenerationType.IDENTITY)
-//     private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-//     @NotBlank
-//     @Column(name = "campaign_name", nullable = false, unique = true)
-//     private String campaignName;
+    private String campaignName;
 
-//     @NotNull
-//     @Column(nullable = false)
-//     private LocalDate startDate;
+    private LocalDate startDate;
 
-//     @NotNull
-//     @Column(nullable = false)
-//     private LocalDate endDate;
+    private LocalDate endDate;
 
-//     @NotNull
-//     @PositiveOrZero
-//     @Column(nullable = false)
-//     private BigDecimal budget;
+    private BigDecimal budget;
 
-//     @Column(nullable = false)
-//     private Boolean active = true;
+    private Boolean active = true;
 
-//     public Campaign() {
-//     }
+    public Campaign(String campaignName, LocalDate startDate, LocalDate endDate, BigDecimal budget, Boolean active) {
+        this.campaignName = campaignName;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.budget = budget;
+        this.active = active;
+    }
 
-//     public Campaign(String campaignName, LocalDate startDate,
-//                     LocalDate endDate, BigDecimal budget, Boolean active) {
-//         this.campaignName = campaignName;
-//         this.startDate = startDate;
-//         this.endDate = endDate;
-//         this.budget = budget;
-//         this.active = active;
-//     }
+    public Long getId() {
+        return id;
+    }
 
-//     public Long getId() {
-//         return id;
-//     }
+    public String getCampaignName() {
+        return campaignName;
+    }
 
-//     public void setId(Long id) {
-//         this.id = id;
-//     }
+    public LocalDate getStartDate() {
+        return startDate;
+    }
 
-//     public String getCampaignName() {
-//         return campaignName;
-//     }
+    public LocalDate getEndDate() {
+        return endDate;
+    }
 
-//     public void setCampaignName(String campaignName) {
-//         this.campaignName = campaignName;
-//     }
+    public BigDecimal getBudget() {
+        return budget;
+    }
 
-//     public LocalDate getStartDate() {
-//         return startDate;
-//     }
+    public Boolean getActive() {
+        return active;
+    }
 
-//     public void setStartDate(LocalDate startDate) {
-//         this.startDate = startDate;
-//     }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-//     public LocalDate getEndDate() {
-//         return endDate;
-//     }
+    public void setCampaignName(String campaignName) {
+        this.campaignName = campaignName;
+    }
 
-//     public void setEndDate(LocalDate endDate) {
-//         this.endDate = endDate;
-//     }
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
 
-//     public BigDecimal getBudget() {
-//         return budget;
-//     }
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
+    }
 
-//     public void setBudget(BigDecimal budget) {
-//         this.budget = budget;
-//     }
+    public void setBudget(BigDecimal budget) {
+        this.budget = budget;
+    }
 
-//     public Boolean getActive() {
-//         return active;
-//     }
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
 
-//     public void setActive(Boolean active) {
-//         this.active = active;
-//     }
-// }
+
+}
