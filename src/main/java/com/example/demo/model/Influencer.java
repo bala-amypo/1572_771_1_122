@@ -1,95 +1,90 @@
-// package com.example.demo.model;
+package com.example.demo.model;
 
-// import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
-// import jakarta.persistence.Entity;
-// import jakarta.persistence.GeneratedValue;
-// import jakarta.persistence.GenerationType;
-// import jakarta.persistence.Id;
-// import jakarta.persistence.Column;
-// import jakarta.persistence.PrePersist;
+import jakarta.persistence.*;
 
-// @Entity
-// public class Influencer {
+@Entity
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = "socialHandle"))
+public class Influencer {
 
-//     @Id
-//     @GeneratedValue(strategy = GenerationType.IDENTITY)
-//     private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-//     private String name;
+    private String name;
 
-//     @Column(unique = true, nullable = false)
-//     private String socialHandle;
+    private String socialHandle;
 
-//     private String email;
+    private String email;
 
-//     private Boolean active;
+    private Boolean active = true;
 
-//     private Timestamp createdAt;
+    private LocalDateTime createdAt;
 
-//     public Influencer() {}
+    @PrePersist
+    public void onCreate() {
+        this.createdAt = LocalDateTime.now();
+    }
 
-//     public Influencer(String name, String socialHandle, String email, Boolean active, Timestamp createdAt) {
-//         this.name = name;
-//         this.socialHandle = socialHandle;
-//         this.email = email;
-//         this.active = active;
-//         this.createdAt = createdAt;
-//     }
+    public Influencer(){}
 
-//     @PrePersist
-//     protected void onCreate() {
-//         this.createdAt = new Timestamp(System.currentTimeMillis());
-//         if (this.active == null) {
-//             this.active = true;
-//         }
-//     }
+    public Influencer(String name, String socialHandle, String email, Boolean active, LocalDateTime createdAt) {
+        this.name = name;
+        this.socialHandle = socialHandle;
+        this.email = email;
+        this.active = active;
+        this.createdAt = createdAt;
+    }
 
-//     public Long getId() {
-//         return id;
-//     }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-//     public void setId(Long id) {
-//         this.id = id;
-//     }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-//     public String getName() {
-//         return name;
-//     }
+    public void setSocialHandle(String socialHandle) {
+        this.socialHandle = socialHandle;
+    }
 
-//     public void setName(String name) {
-//         this.name = name;
-//     }
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-//     public String getSocialHandle() {
-//         return socialHandle;
-//     }
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
 
-//     public void setSocialHandle(String socialHandle) {
-//         this.socialHandle = socialHandle;
-//     }
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
 
-//     public String getEmail() {
-//         return email;
-//     }
+    public Long getId() {
+        return id;
+    }
 
-//     public void setEmail(String email) {
-//         this.email = email;
-//     }
+    public String getName() {
+        return name;
+    }
 
-//     public Boolean getActive() {
-//         return active;
-//     }
+    public String getSocialHandle() {
+        return socialHandle;
+    }
 
-//     public void setActive(Boolean active) {
-//         this.active = active;
-//     }
+    public String getEmail() {
+        return email;
+    }
 
-//     public Timestamp getCreatedAt() {
-//         return createdAt;
-//     }
+    public Boolean getActive() {
+        return active;
+    }
 
-//     public void setCreatedAt(Timestamp createdAt) {
-//         this.createdAt = createdAt;
-//     }
-// }
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+    
+
+    
+}
