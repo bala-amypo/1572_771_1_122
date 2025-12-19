@@ -8,9 +8,9 @@ import org.springframework.stereotype.Repository;
 import com.example.demo.model.RoiReport;
 @Repository
 
-public interface RoiReportRepository extends JpaRepository<RoiReport,Long> {
+public interface RoiReportRepository extends JpaRepository<RoiReport, Long> {
 
     List<RoiReport> findByInfluencerId(Long influencerId);
 
-    
+    List<RoiReport> findByCampaignId(Long campaignId);
 }
