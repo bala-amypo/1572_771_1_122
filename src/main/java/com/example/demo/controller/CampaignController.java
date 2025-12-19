@@ -14,44 +14,45 @@ import com.example.demo.service.CampaignService;
 public class CampaignController {
 
     @Autowired
-    CampaignService campaignService;
+    private CampaignService campaignService;
 
     @GetMapping
-    public List<Campaign> getAll() {
-        return campaignService.getAllCampaigns();
+    public ResponseEntity<List<Campaign>> getAll() {
+        return ResponseEntity.ok(campaignService.getAllCampaigns());
     }
 
     @PostMapping
-    public ResponseEntity<Campaign> createAll(@RequestBody Campaign campaign) {
-        Campaign cp = campaignService.createCampaign(campaign);
-        return ResponseEntity.status(201).body(cp);
+    public ResponseEntity<Campaign> create(@RequestBody Campaign campaign) {
+        Campaign savedCampaign = campaignService.createCampaign(campaign);
+        return ResponseEntity.status(201).body(savedCampaign);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Campaign> getById(@PathVariable Long id) {
-        Campaign cp = campaignService.getCampaignById(id);
-        return ResponseEntity.status(200).body(cp);
+        Campaign campaign = campaignService.getCampaignById(id);
+        if (campaign != null) {
+            return ResponseEntity.ok(campaign);
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> putAll(
+    public ResponseEntity<String> update(
             @PathVariable Long id,
             @RequestBody Campaign campaign) {
 
-        if (campaignService.updateCampaign(id, campaign) != null) {
-            return ResponseEntity.status(201).body("Successful");
-        } else {
-            return ResponseEntity.status(404).build();
+        Campaign updated = campaignService.updateCampaign(id, campaign);
+        if (updated != null) {
+            return ResponseEntity.ok("Updated Successfully");
         }
+        return ResponseEntity.notFound().build();
     }
 
     @PutMapping("/{id}/deactivate")
     public ResponseEntity<String> deactivate(@PathVariable Long id) {
-        boolean isDeactivated = campaignService.deactivateCampaign(id);
-        if (isDeactivated) {
-            return ResponseEntity.status(201).body("Successful");
-        } else {
-            return ResponseEntity.status(404).build();
+        if (campaignService.deactivateCampaign(id)) {
+            return ResponseEntity.ok("Deactivated Successfully");
         }
+        return ResponseEntity.notFound().build();
     }
 }
