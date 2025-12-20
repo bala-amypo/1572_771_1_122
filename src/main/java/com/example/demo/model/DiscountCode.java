@@ -35,7 +35,7 @@ public class DiscountCode {
 
     public DiscountCode() {}
 
-    // getters & setters
+    // Getters & Setters
     public Long getId() { return id; }
     public String getCode() { return code; }
     public Influencer getInfluencer() { return influencer; }
