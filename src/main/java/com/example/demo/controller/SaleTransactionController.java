@@ -10,36 +10,44 @@ import com.example.demo.model.SaleTransaction;
 import com.example.demo.service.SaleTransactionService;
 
 @RestController
-@RequestMapping("/api/sale-transactions")
+@RequestMapping("/api/sales")
 public class SaleTransactionController {
 
     @Autowired
-    SaleTransactionService saleTransactionService;
+    private SaleTransactionService saleTransactionService;
 
-    @GetMapping
-    public List<SaleTransaction> getAll() {
-        return saleTransactionService.getAllTransactions();
-    }
-
+    // POST / - Log sale transaction
     @PostMapping
-    public ResponseEntity<SaleTransaction> createAll(@RequestBody SaleTransaction transaction) {
-        SaleTransaction st = saleTransactionService.createTransaction(transaction);
-        return ResponseEntity.status(201).body(st);
+    public ResponseEntity<SaleTransaction> logTransaction(
+            @RequestBody SaleTransaction transaction) {
+
+        return ResponseEntity.status(201)
+                .body(saleTransactionService.logTransaction(transaction));
     }
 
+    // GET /{id}
     @GetMapping("/{id}")
     public ResponseEntity<SaleTransaction> getById(@PathVariable Long id) {
-        SaleTransaction st = saleTransactionService.getTransactionById(id);
-        return ResponseEntity.status(200).body(st);
+        SaleTransaction tx = saleTransactionService.getTransactionById(id);
+        if (tx == null) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(tx);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteAll(@PathVariable Long id) {
-        boolean isDeleted = saleTransactionService.deleteTransaction(id);
-        if (isDeleted) {
-            return ResponseEntity.status(201).body("Successful");
-        } else {
-            return ResponseEntity.status(404).build();
-        }
+    // GET /code/{codeId}
+    @GetMapping("/code/{codeId}")
+    public List<SaleTransaction> getByCode(@PathVariable Long codeId) {
+        return saleTransactionService.getSalesForCode(codeId);
+    }
+
+    // GET /influencer/{influencerId}
+    @GetMapping("/influencer/{influencerId}")
+    public List<SaleTransaction> getByInfluencer(@PathVariable Long influencerId) {
+        return saleTransactionService.getSalesForInfluencer(influencerId);
+    }
+
+    // GET /campaign/{campaignId}
+    @GetMapping("/campaign/{campaignId}")
+    public List<SaleTransaction> getByCampaign(@PathVariable Long campaignId) {
+        return saleTransactionService.getSalesForCampaign(campaignId);
     }
 }

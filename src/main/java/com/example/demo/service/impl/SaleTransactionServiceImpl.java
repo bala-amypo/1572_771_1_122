@@ -1,12 +1,14 @@
 package com.example.demo.service.impl;
 
+import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.model.DiscountCode;
 import com.example.demo.model.SaleTransaction;
+import com.example.demo.repository.DiscountCodeRepository;
 import com.example.demo.repository.SaleTransactionRepository;
 import com.example.demo.service.SaleTransactionService;
 
@@ -14,50 +16,47 @@ import com.example.demo.service.SaleTransactionService;
 public class SaleTransactionServiceImpl implements SaleTransactionService {
 
     @Autowired
-    SaleTransactionRepository saleTransactionRepository;
+    private SaleTransactionRepository saleTransactionRepository;
+
+    @Autowired
+    private DiscountCodeRepository discountCodeRepository;
 
     @Override
-    public SaleTransaction createTransaction(SaleTransaction transaction) {
+    public SaleTransaction logTransaction(SaleTransaction transaction) {
+
+        // Rule: saleAmount > 0
+        if (transaction.getSaleAmount() == null ||
+            transaction.getSaleAmount().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new RuntimeException("Sale amount must be greater than zero");
+        }
+
+        // Attach managed DiscountCode
+        DiscountCode code = discountCodeRepository.findById(
+                transaction.getDiscountCode().getId()
+        ).orElseThrow(() -> new RuntimeException("Discount code not found"));
+
+        transaction.setDiscountCode(code);
+
         return saleTransactionRepository.save(transaction);
     }
 
     @Override
-    public List<SaleTransaction> getAllTransactions() {
-        return saleTransactionRepository.findAll();
-    }
-
-    @Override
     public SaleTransaction getTransactionById(Long id) {
-        Optional<SaleTransaction> optionalTransaction = saleTransactionRepository.findById(id);
-        return optionalTransaction.orElse(null);
+        return saleTransactionRepository.findById(id).orElse(null);
     }
 
     @Override
-    public boolean deleteTransaction(Long id) {
-        if (saleTransactionRepository.existsById(id)) {
-            saleTransactionRepository.deleteById(id);
-            return true;
-        }
-        return false;
+    public List<SaleTransaction> getSalesForCode(Long codeId) {
+        return saleTransactionRepository.findByDiscountCodeId(codeId);
     }
 
     @Override
-    public SaleTransaction logTransaction(SaleTransaction transaction) {
-        throw new UnsupportedOperationException("Unimplemented method 'logTransaction'");
+    public List<SaleTransaction> getSalesForInfluencer(Long influencerId) {
+        return saleTransactionRepository.findByDiscountCodeInfluencerId(influencerId);
     }
 
     @Override
-    public SaleTransaction getSalesForCode(Long codeId) {
-        throw new UnsupportedOperationException("Unimplemented method 'getSalesForCode'");
-    }
-
-    @Override
-    public SaleTransaction getSalesForInfluencer(Long influencerId) {
-        throw new UnsupportedOperationException("Unimplemented method 'getSalesForInfluencer'");
-    }
-
-    @Override
-    public SaleTransaction getSalesForCampaign(long campaignId) {
-        throw new UnsupportedOperationException("Unimplemented method 'getSalesForCampaign'");
+    public List<SaleTransaction> getSalesForCampaign(Long campaignId) {
+        return saleTransactionRepository.findByDiscountCodeCampaignId(campaignId);
     }
 }
