@@ -3,6 +3,7 @@ package com.example.demo.service.impl;
 import java.util.List;
 import java.util.Optional;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -82,5 +83,17 @@ public class DiscountCodeServiceImpl implements DiscountCodeService {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public @Nullable Object getCodesByCampaign(Long campaignId) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getCodesByCampaign'");
+    }
+
+    @Override
+    public @Nullable Object getCodesByInfluencer(Long influencerId) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getCodesByInfluencer'");
     }
 }
