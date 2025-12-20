@@ -12,25 +12,29 @@ import com.example.demo.service.UserService;
 public class AuthController {
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
+    // POST /auth/register
     @PostMapping("/register")
     public ResponseEntity<User> register(@RequestBody User user) {
         User savedUser = userService.registerUser(user);
         return ResponseEntity.status(201).body(savedUser);
     }
 
+    // POST /auth/login
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody User user) {
 
         User existingUser = userService.findByEmail(user.getEmail());
 
-        if (existingUser != null &&
-            existingUser.getPassword().equals(user.getPassword())) {
-
-            return ResponseEntity.status(200).body("Login Successful");
-        } else {
+        if (existingUser == null) {
             return ResponseEntity.status(401).body("Invalid Email or Password");
         }
+
+        if (!existingUser.getPassword().equals(user.getPassword())) {
+            return ResponseEntity.status(401).body("Invalid Email or Password");
+        }
+
+        return ResponseEntity.ok("Login Successful");
     }
 }
