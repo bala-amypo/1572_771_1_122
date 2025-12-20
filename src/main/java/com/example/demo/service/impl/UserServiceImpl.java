@@ -11,17 +11,25 @@ import com.example.demo.service.UserService;
 public class UserServiceImpl implements UserService {
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Override
     public User registerUser(User user) {
+
+        if (userRepository.existsByEmail(user.getEmail())) {
+            throw new RuntimeException("Email already exists");
+        }
+
+        // role defaults to MARKETER (screenshot rule)
+        if (user.getRole() == null) {
+            user.setRole("MARKETER");
+        }
+
         return userRepository.save(user);
     }
 
     @Override
     public User findByEmail(String email) {
-        return (User) userRepository.findAll();
+        return userRepository.findByEmail(email); // ✅ FIXED
     }
-
-    
 }
