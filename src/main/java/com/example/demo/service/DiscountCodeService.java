@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import java.util.List;
+
 import com.example.demo.model.DiscountCode;
 
 public interface DiscountCodeService {
@@ -12,6 +13,10 @@ public interface DiscountCodeService {
     DiscountCode getCodeById(Long id);
 
     List<DiscountCode> getAllCodes();
+
+    List<DiscountCode> getCodesByInfluencer(Long influencerId);
+
+    List<DiscountCode> getCodesByCampaign(Long campaignId);
 
     boolean deactivateCode(Long id);
 }
