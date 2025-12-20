@@ -1,9 +1,7 @@
 package com.example.demo.service.impl;
 
 import java.util.List;
-import java.util.Optional;
 
-import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,18 +28,17 @@ public class DiscountCodeServiceImpl implements DiscountCodeService {
     @Override
     public DiscountCode createDiscountCode(DiscountCode code) {
 
-        // ✅ Enforce unique code rule
         if (discountCodeRepository.existsByCode(code.getCode())) {
             throw new RuntimeException("Discount code already exists");
         }
 
-        Influencer influencer = influencerRepository
-                .findById(code.getInfluencer().getId())
-                .orElseThrow(() -> new RuntimeException("Influencer not found"));
+        Influencer influencer = influencerRepository.findById(
+                code.getInfluencer().getId()
+        ).orElseThrow(() -> new RuntimeException("Influencer not found"));
 
-        Campaign campaign = campaignRepository
-                .findById(code.getCampaign().getId())
-                .orElseThrow(() -> new RuntimeException("Campaign not found"));
+        Campaign campaign = campaignRepository.findById(
+                code.getCampaign().getId()
+        ).orElseThrow(() -> new RuntimeException("Campaign not found"));
 
         code.setInfluencer(influencer);
         code.setCampaign(campaign);
@@ -52,9 +49,7 @@ public class DiscountCodeServiceImpl implements DiscountCodeService {
     @Override
     public DiscountCode updateDiscountCode(Long id, DiscountCode updatedCode) {
 
-        DiscountCode existing = discountCodeRepository.findById(id)
-                .orElse(null);
-
+        DiscountCode existing = discountCodeRepository.findById(id).orElse(null);
         if (existing == null) return null;
 
         existing.setDiscountPercentage(updatedCode.getDiscountPercentage());
@@ -74,26 +69,22 @@ public class DiscountCodeServiceImpl implements DiscountCodeService {
     }
 
     @Override
+    public List<DiscountCode> getCodesByInfluencer(Long influencerId) {
+        return discountCodeRepository.findByInfluencerId(influencerId);
+    }
+
+    @Override
+    public List<DiscountCode> getCodesByCampaign(Long campaignId) {
+        return discountCodeRepository.findByCampaignId(campaignId);
+    }
+
+    @Override
     public boolean deactivateCode(Long id) {
-        Optional<DiscountCode> optional = discountCodeRepository.findById(id);
-        if (optional.isPresent()) {
-            DiscountCode code = optional.get();
-            code.setActive(false);
-            discountCodeRepository.save(code);
-            return true;
-        }
-        return false;
-    }
+        DiscountCode code = discountCodeRepository.findById(id).orElse(null);
+        if (code == null) return false;
 
-    @Override
-    public @Nullable Object getCodesByCampaign(Long campaignId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getCodesByCampaign'");
-    }
-
-    @Override
-    public @Nullable Object getCodesByInfluencer(Long influencerId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getCodesByInfluencer'");
+        code.setActive(false);
+        discountCodeRepository.save(code);
+        return true;
     }
 }
