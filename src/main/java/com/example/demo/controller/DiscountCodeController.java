@@ -16,15 +16,15 @@ public class DiscountCodeController {
     @Autowired
     private DiscountCodeService discountCodeService;
 
-    @GetMapping
-    public ResponseEntity<List<DiscountCode>> getAll() {
-        return ResponseEntity.ok(discountCodeService.getAllCodes());
-    }
-
     @PostMapping
     public ResponseEntity<DiscountCode> create(@RequestBody DiscountCode code) {
         return ResponseEntity.status(201)
                 .body(discountCodeService.createDiscountCode(code));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<DiscountCode>> getAll() {
+        return ResponseEntity.ok(discountCodeService.getAllCodes());
     }
 
     @GetMapping("/{id}")
@@ -32,18 +32,6 @@ public class DiscountCodeController {
         DiscountCode code = discountCodeService.getCodeById(id);
         if (code != null) {
             return ResponseEntity.ok(code);
-        }
-        return ResponseEntity.notFound().build();
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<String> update(
-            @PathVariable Long id,
-            @RequestBody DiscountCode code) {
-
-        DiscountCode updated = discountCodeService.updateDiscountCode(id, code);
-        if (updated != null) {
-            return ResponseEntity.ok("Updated Successfully");
         }
         return ResponseEntity.notFound().build();
     }
