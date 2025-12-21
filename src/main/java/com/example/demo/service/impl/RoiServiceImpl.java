@@ -27,6 +27,9 @@ public class RoiServiceImpl implements RoiService {
     @Autowired
     private SaleTransactionRepository saleTransactionRepository;
 
+    // -------------------------------
+    // CREATE + CALCULATE ROI
+    // -------------------------------
     @Override
     public RoiReport generateRoiForCode(Long codeId) {
 
@@ -44,8 +47,8 @@ public class RoiServiceImpl implements RoiService {
 
         BigDecimal roiPercentage = BigDecimal.ZERO;
         if (totalSales.compareTo(BigDecimal.ZERO) > 0) {
-            roiPercentage = totalRevenue
-                    .divide(totalSales, 2, RoundingMode.HALF_UP);
+            roiPercentage = totalRevenue.divide(
+                    totalSales, 2, RoundingMode.HALF_UP);
         }
 
         RoiReport report = new RoiReport();
@@ -58,9 +61,40 @@ public class RoiServiceImpl implements RoiService {
         return roiReportRepository.save(report);
     }
 
+    // -------------------------------
+    // FIXED GET (NO NULL VALUES)
+    // -------------------------------
     @Override
     public RoiReport getReportById(Long id) {
-        return roiReportRepository.findById(id).orElse(null);
+
+        RoiReport report = roiReportRepository.findById(id).orElse(null);
+        if (report == null) return null;
+
+        // 🔥 AUTO-FIX OLD / BAD RECORDS
+        if (report.getTotalSales() == null || report.getTotalRevenue() == null) {
+
+            List<SaleTransaction> transactions =
+                    saleTransactionRepository.findAll();
+
+            BigDecimal totalSales = BigDecimal.valueOf(transactions.size());
+            BigDecimal totalRevenue = transactions.stream()
+                    .map(SaleTransaction::getSaleAmount)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+            BigDecimal roiPercentage = BigDecimal.ZERO;
+            if (totalSales.compareTo(BigDecimal.ZERO) > 0) {
+                roiPercentage = totalRevenue.divide(
+                        totalSales, 2, RoundingMode.HALF_UP);
+            }
+
+            report.setTotalSales(totalSales);
+            report.setTotalRevenue(totalRevenue);
+            report.setRoiPercentage(roiPercentage);
+
+            return roiReportRepository.save(report);
+        }
+
+        return report;
     }
 
     @Override

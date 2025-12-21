@@ -28,6 +28,7 @@ public class RoiReportController {
     // GET /api/roi/{id}
     @GetMapping("/{id}")
     public ResponseEntity<RoiReport> getById(@PathVariable Long id) {
+
         RoiReport report = roiService.getReportById(id);
         return ResponseEntity.ok(report);
     }
