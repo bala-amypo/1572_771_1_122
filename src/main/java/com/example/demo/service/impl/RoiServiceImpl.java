@@ -1,20 +1,3 @@
-package com.example.demo.service.impl;
-
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.example.demo.model.DiscountCode;
-import com.example.demo.model.RoiReport;
-import com.example.demo.model.SaleTransaction;
-import com.example.demo.repository.DiscountCodeRepository;
-import com.example.demo.repository.RoiReportRepository;
-import com.example.demo.repository.SaleTransactionRepository;
-import com.example.demo.service.RoiService;
-
 @Service
 public class RoiServiceImpl implements RoiService {
 
@@ -22,14 +5,11 @@ public class RoiServiceImpl implements RoiService {
     private RoiReportRepository roiReportRepository;
 
     @Autowired
-    private DiscountCodeRepository discountCodeRepository;
-
-    @Autowired
     private SaleTransactionRepository saleTransactionRepository;
 
-    // -------------------------------
-    // CREATE + CALCULATE ROI
-    // -------------------------------
+    @Autowired
+    private DiscountCodeRepository discountCodeRepository;
+
     @Override
     public RoiReport generateRoiForCode(Long codeId) {
 
@@ -39,21 +19,18 @@ public class RoiServiceImpl implements RoiService {
         List<SaleTransaction> transactions =
                 saleTransactionRepository.findByDiscountCodeId(codeId);
 
-        BigDecimal totalSales = BigDecimal.valueOf(transactions.size());
-
         BigDecimal totalRevenue = transactions.stream()
                 .map(SaleTransaction::getSaleAmount)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        BigDecimal roiPercentage = BigDecimal.ZERO;
-        if (totalSales.compareTo(BigDecimal.ZERO) > 0) {
-            roiPercentage = totalRevenue.divide(
-                    totalSales, 2, RoundingMode.HALF_UP);
-        }
+        BigDecimal totalSales =
+                BigDecimal.valueOf(transactions.size());
+
+        BigDecimal roiPercentage = totalRevenue; // no cost given in question
 
         RoiReport report = new RoiReport();
-        report.setCampaign(code.getCampaign());
-        report.setInfluencer(code.getInfluencer());
+        report.setCampaign(code.getCampaign());       // ✅ FIX
+        report.setInfluencer(code.getInfluencer());   // ✅ FIX
         report.setTotalSales(totalSales);
         report.setTotalRevenue(totalRevenue);
         report.setRoiPercentage(roiPercentage);
@@ -61,40 +38,9 @@ public class RoiServiceImpl implements RoiService {
         return roiReportRepository.save(report);
     }
 
-    // -------------------------------
-    // FIXED GET (NO NULL VALUES)
-    // -------------------------------
     @Override
     public RoiReport getReportById(Long id) {
-
-        RoiReport report = roiReportRepository.findById(id).orElse(null);
-        if (report == null) return null;
-
-        // 🔥 AUTO-FIX OLD / BAD RECORDS
-        if (report.getTotalSales() == null || report.getTotalRevenue() == null) {
-
-            List<SaleTransaction> transactions =
-                    saleTransactionRepository.findAll();
-
-            BigDecimal totalSales = BigDecimal.valueOf(transactions.size());
-            BigDecimal totalRevenue = transactions.stream()
-                    .map(SaleTransaction::getSaleAmount)
-                    .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-            BigDecimal roiPercentage = BigDecimal.ZERO;
-            if (totalSales.compareTo(BigDecimal.ZERO) > 0) {
-                roiPercentage = totalRevenue.divide(
-                        totalSales, 2, RoundingMode.HALF_UP);
-            }
-
-            report.setTotalSales(totalSales);
-            report.setTotalRevenue(totalRevenue);
-            report.setRoiPercentage(roiPercentage);
-
-            return roiReportRepository.save(report);
-        }
-
-        return report;
+        return roiReportRepository.findById(id).orElse(null);
     }
 
     @Override
