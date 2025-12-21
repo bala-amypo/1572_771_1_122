@@ -1,55 +1,71 @@
-package com.example.demo.controller;
+package com.example.demo.service.impl;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.stereotype.Service;
 
+import com.example.demo.model.DiscountCode;
 import com.example.demo.model.RoiReport;
+import com.example.demo.model.SaleTransaction;
+import com.example.demo.repository.DiscountCodeRepository;
+import com.example.demo.repository.RoiReportRepository;
+import com.example.demo.repository.SaleTransactionRepository;
 import com.example.demo.service.RoiService;
 
-@RestController
-@RequestMapping("/api/roi")
-public class RoiReportController {
+@Service
+public class RoiServiceImpl implements RoiService {
 
     @Autowired
-    private RoiService roiService;
+    private RoiReportRepository roiReportRepository;
 
-    // POST /api/roi/generate/{codeId}
-    @PostMapping("/generate/{codeId}")
-    public ResponseEntity<RoiReport> generateRoi(
-            @PathVariable Long codeId) {
+    @Autowired
+    private SaleTransactionRepository saleTransactionRepository;
 
-        RoiReport report = roiService.generateRoiForCode(codeId);
-        return ResponseEntity.status(201).body(report);
+    @Autowired
+    private DiscountCodeRepository discountCodeRepository;
+
+    @Override
+    public RoiReport generateRoiForCode(Long codeId) {
+
+        DiscountCode discountCode = discountCodeRepository.findById(codeId)
+                .orElseThrow(() -> new RuntimeException("Discount Code not found"));
+
+        List<SaleTransaction> transactions =
+                saleTransactionRepository.findByDiscountCodeId(codeId);
+
+        BigDecimal totalRevenue = transactions.stream()
+                .map(SaleTransaction::getSaleAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        BigDecimal totalSales =
+                BigDecimal.valueOf(transactions.size());
+
+        BigDecimal roiPercentage = totalRevenue; // cost not provided
+
+        RoiReport report = new RoiReport();
+        report.setCampaign(discountCode.getCampaign());
+        report.setInfluencer(discountCode.getInfluencer());
+        report.setTotalSales(totalSales);
+        report.setTotalRevenue(totalRevenue);
+        report.setRoiPercentage(roiPercentage);
+
+        return roiReportRepository.save(report);
     }
 
-    // GET /api/roi/{id}
-    @GetMapping("/{id}")
-    public ResponseEntity<RoiReport> getById(@PathVariable Long id) {
-
-        RoiReport report = roiService.getReportById(id);
-        return ResponseEntity.ok(report);
+    @Override
+    public RoiReport getReportById(Long id) {
+        return roiReportRepository.findById(id).orElse(null);
     }
 
-    // GET /api/roi/influencer/{influencerId}
-    @GetMapping("/influencer/{influencerId}")
-    public ResponseEntity<List<RoiReport>> getByInfluencer(
-            @PathVariable Long influencerId) {
-
-        return ResponseEntity.ok(
-                roiService.getReportsForInfluencer(influencerId)
-        );
+    @Override
+    public List<RoiReport> getReportsForInfluencer(Long influencerId) {
+        return roiReportRepository.findByInfluencerId(influencerId);
     }
 
-    // GET /api/roi/campaign/{campaignId}
-    @GetMapping("/campaign/{campaignId}")
-    public ResponseEntity<List<RoiReport>> getByCampaign(
-            @PathVariable Long campaignId) {
-
-        return ResponseEntity.ok(
-                roiService.getReportsForCampaign(campaignId)
-        );
+    @Override
+    public List<RoiReport> getReportsForCampaign(Long campaignId) {
+        return roiReportRepository.findByCampaignId(campaignId);
     }
 }
