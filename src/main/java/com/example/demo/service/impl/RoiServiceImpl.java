@@ -1,4 +1,4 @@
-package com.example.ROI.service.impl;
+package com.example.demo.service.impl;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -7,13 +7,13 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.ROI.model.DiscountCode;
-import com.example.ROI.model.RoiReport;
-import com.example.ROI.model.SaleTransaction;
-import com.example.ROI.repository.DiscountCodeRepository;
-import com.example.ROI.repository.RoiReportRepository;
-import com.example.ROI.repository.SaleTransactionRepository;
-import com.example.ROI.service.RoiService;
+import com.example.demo.model.DiscountCode;
+import com.example.demo.model.RoiReport;
+import com.example.demo.model.SaleTransaction;
+import com.example.demo.repository.DiscountCodeRepository;
+import com.example.demo.repository.RoiReportRepository;
+import com.example.demo.repository.SaleTransactionRepository;
+import com.example.demo.service.RoiService;
 
 @Service
 public class RoiServiceImpl implements RoiService {
