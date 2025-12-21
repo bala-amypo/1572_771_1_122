@@ -16,40 +16,31 @@ public class RoiReportController {
     @Autowired
     private RoiService roiService;
 
-    // POST /api/roi/generate/{codeId}
     @PostMapping("/generate/{codeId}")
-    public ResponseEntity<RoiReport> generateRoi(
-            @PathVariable Long codeId) {
-
-        RoiReport report = roiService.generateRoiForCode(codeId);
-        return ResponseEntity.status(201).body(report);
+    public ResponseEntity<RoiReport> generate(@PathVariable Long codeId) {
+        return ResponseEntity.status(201)
+                .body(roiService.generateRoiForCode(codeId));
     }
 
-    // GET /api/roi/{id}
     @GetMapping("/{id}")
     public ResponseEntity<RoiReport> getById(@PathVariable Long id) {
-
         RoiReport report = roiService.getReportById(id);
-        return ResponseEntity.ok(report);
+        return report != null
+                ? ResponseEntity.ok(report)
+                : ResponseEntity.notFound().build();
     }
 
-    // GET /api/roi/influencer/{influencerId}
-    @GetMapping("/influencer/{influencerId}")
-    public ResponseEntity<List<RoiReport>> getByInfluencer(
-            @PathVariable Long influencerId) {
-
+    @GetMapping("/influencer/{id}")
+    public ResponseEntity<List<RoiReport>> getByInfluencer(@PathVariable Long id) {
         return ResponseEntity.ok(
-                roiService.getReportsForInfluencer(influencerId)
+                roiService.getReportsForInfluencer(id)
         );
     }
 
-    // GET /api/roi/campaign/{campaignId}
-    @GetMapping("/campaign/{campaignId}")
-    public ResponseEntity<List<RoiReport>> getByCampaign(
-            @PathVariable Long campaignId) {
-
+    @GetMapping("/campaign/{id}")
+    public ResponseEntity<List<RoiReport>> getByCampaign(@PathVariable Long id) {
         return ResponseEntity.ok(
-                roiService.getReportsForCampaign(campaignId)
+                roiService.getReportsForCampaign(id)
         );
     }
 }
