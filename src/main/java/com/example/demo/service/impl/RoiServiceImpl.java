@@ -29,28 +29,35 @@ public class RoiServiceImpl implements RoiService {
     @Override
     public RoiReport generateRoiForCode(Long codeId) {
 
-        DiscountCode discountCode = discountCodeRepository.findById(codeId)
-                .orElseThrow(() -> new RuntimeException("Discount Code not found"));
-
+        // 1. Get all sales for the discount code
         List<SaleTransaction> transactions =
                 saleTransactionRepository.findByDiscountCodeId(codeId);
 
+        // 2. Calculate total revenue
         BigDecimal totalRevenue = transactions.stream()
                 .map(SaleTransaction::getSaleAmount)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        BigDecimal totalSales =
-                BigDecimal.valueOf(transactions.size());
+        // 3. Calculate total sales count
+        BigDecimal totalSales = BigDecimal.valueOf(transactions.size());
 
-        BigDecimal roiPercentage = totalRevenue; // cost not provided
+        // 4. Calculate ROI (no cost provided in question)
+        BigDecimal roiPercentage = totalRevenue;
 
+        // 5. Create ROI report
         RoiReport report = new RoiReport();
-        report.setCampaign(discountCode.getCampaign());
-        report.setInfluencer(discountCode.getInfluencer());
         report.setTotalSales(totalSales);
         report.setTotalRevenue(totalRevenue);
         report.setRoiPercentage(roiPercentage);
 
+        // 6. OPTIONAL: set campaign & influencer if sales exist
+        if (!transactions.isEmpty()) {
+            DiscountCode code = transactions.get(0).getDiscountCode();
+            report.setCampaign(code.getCampaign());
+            report.setInfluencer(code.getInfluencer());
+        }
+
+        // 7. Save & return (generatedAt auto-set)
         return roiReportRepository.save(report);
     }
 
