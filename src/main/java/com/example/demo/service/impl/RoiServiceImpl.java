@@ -1,3 +1,19 @@
+package com.example.demo.service.impl;
+
+import java.math.BigDecimal;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.example.demo.model.DiscountCode;
+import com.example.demo.model.RoiReport;
+import com.example.demo.model.SaleTransaction;
+import com.example.demo.repository.DiscountCodeRepository;
+import com.example.demo.repository.RoiReportRepository;
+import com.example.demo.repository.SaleTransactionRepository;
+import com.example.demo.service.RoiService;
+
 @Service
 public class RoiServiceImpl implements RoiService {
 
@@ -13,8 +29,8 @@ public class RoiServiceImpl implements RoiService {
     @Override
     public RoiReport generateRoiForCode(Long codeId) {
 
-        DiscountCode code = discountCodeRepository.findById(codeId)
-                .orElseThrow(() -> new RuntimeException("Discount code not found"));
+        DiscountCode discountCode = discountCodeRepository.findById(codeId)
+                .orElseThrow(() -> new RuntimeException("Discount Code not found"));
 
         List<SaleTransaction> transactions =
                 saleTransactionRepository.findByDiscountCodeId(codeId);
@@ -26,11 +42,11 @@ public class RoiServiceImpl implements RoiService {
         BigDecimal totalSales =
                 BigDecimal.valueOf(transactions.size());
 
-        BigDecimal roiPercentage = totalRevenue; // no cost given in question
+        BigDecimal roiPercentage = totalRevenue; // cost not provided
 
         RoiReport report = new RoiReport();
-        report.setCampaign(code.getCampaign());       // ✅ FIX
-        report.setInfluencer(code.getInfluencer());   // ✅ FIX
+        report.setCampaign(discountCode.getCampaign());
+        report.setInfluencer(discountCode.getInfluencer());
         report.setTotalSales(totalSales);
         report.setTotalRevenue(totalRevenue);
         report.setRoiPercentage(roiPercentage);
