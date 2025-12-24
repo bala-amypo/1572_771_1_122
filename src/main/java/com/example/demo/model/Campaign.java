@@ -8,11 +8,10 @@ public class Campaign {
     private LocalDate startDate;
     private LocalDate endDate;
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-
     public String getCampaignName() { return campaignName; }
-    public void setCampaignName(String campaignName) { this.campaignName = campaignName; }
+    public void setCampaignName(String campaignName) {
+        this.campaignName = campaignName;
+    }
 
     public LocalDate getStartDate() { return startDate; }
     public void setStartDate(LocalDate startDate) { this.startDate = startDate; }
