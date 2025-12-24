@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 public class SaleTransaction {
-    private Long id;
     private BigDecimal transactionAmount;
     private Timestamp transactionDate;
     private Long customerId;
