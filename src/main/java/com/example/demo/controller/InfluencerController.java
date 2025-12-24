@@ -11,24 +11,55 @@ import java.util.List;
 @RequestMapping("/influencers")
 public class InfluencerController {
 
-    private final InfluencerService service;
+    private final InfluencerService influencerService;
 
-    public InfluencerController(InfluencerService service) {
-        this.service = service;
+    // ✅ Constructor injection (Mockito-friendly)
+    public InfluencerController(InfluencerService influencerService) {
+        this.influencerService = influencerService;
     }
 
+    // 🔹 Create Influencer
     @PostMapping
-    public ResponseEntity<Influencer> createInfluencer(@RequestBody Influencer inf) {
-        return ResponseEntity.ok(service.createInfluencer(inf));
+    public ResponseEntity<Influencer> createInfluencer(
+            @RequestBody Influencer influencer) {
+
+        Influencer saved = influencerService.createInfluencer(influencer);
+        return ResponseEntity.ok(saved);
     }
 
+    // 🔹 Get Influencer by ID
+    @GetMapping("/{id}")
+    public ResponseEntity<Influencer> getInfluencerById(
+            @PathVariable Long id) {
+
+        Influencer influencer = influencerService.getInfluencerById(id);
+        return ResponseEntity.ok(influencer);
+    }
+
+    // 🔹 Get all Influencers
     @GetMapping
     public ResponseEntity<List<Influencer>> getAllInfluencers() {
-        return ResponseEntity.ok(service.getAllInfluencers());
+
+        List<Influencer> influencers = influencerService.getAllInfluencers();
+        return ResponseEntity.ok(influencers);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Influencer> getInfluencer(@PathVariable Long id) {
-        return ResponseEntity.ok(service.getInfluencerById(id));
+    // 🔹 Update Influencer
+    @PutMapping("/{id}")
+    public ResponseEntity<Influencer> updateInfluencer(
+            @PathVariable Long id,
+            @RequestBody Influencer influencer) {
+
+        Influencer updated = influencerService.updateInfluencer(id, influencer);
+        return ResponseEntity.ok(updated);
+    }
+
+    // 🔹 Delete Influencer
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteInfluencer(
+            @PathVariable Long id) {
+
+        influencerService.deleteInfluencer(id);
+        return ResponseEntity.ok("Influencer deleted successfully");
     }
 }
