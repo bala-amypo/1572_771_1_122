@@ -11,7 +11,8 @@ import java.util.List;
 @RequestMapping("/api/influencers")
 public class InfluencerController {
 
-    private final InfluencerService service;
+@Autowired
+private InfluencerService influencerService;
 
     public InfluencerController(InfluencerService service) {
         this.service = service;
