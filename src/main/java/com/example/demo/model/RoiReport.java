@@ -1,48 +1,30 @@
 package com.example.demo.model;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.*;
-
-@Entity
 public class RoiReport {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @ManyToOne
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    private Campaign campaign;
-
-    @ManyToOne
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    private Influencer influencer;
-
+    private DiscountCode discountCode;
     private BigDecimal totalSales;
-    private BigDecimal totalRevenue;
-    private BigDecimal roiPercentage;
+    private int totalTransactions;
+    private double roiPercentage;
 
-    private LocalDateTime generatedAt;
-
-    @PrePersist
-    public void onCreate() {
-        this.generatedAt = LocalDateTime.now();
+    public DiscountCode getDiscountCode() { return discountCode; }
+    public void setDiscountCode(DiscountCode discountCode) {
+        this.discountCode = discountCode;
     }
 
-    public Long getId() { return id; }
-    public Campaign getCampaign() { return campaign; }
-    public Influencer getInfluencer() { return influencer; }
     public BigDecimal getTotalSales() { return totalSales; }
-    public BigDecimal getTotalRevenue() { return totalRevenue; }
-    public BigDecimal getRoiPercentage() { return roiPercentage; }
-    public LocalDateTime getGeneratedAt() { return generatedAt; }
+    public void setTotalSales(BigDecimal totalSales) {
+        this.totalSales = totalSales;
+    }
 
-    public void setCampaign(Campaign campaign) { this.campaign = campaign; }
-    public void setInfluencer(Influencer influencer) { this.influencer = influencer; }
-    public void setTotalSales(BigDecimal totalSales) { this.totalSales = totalSales; }
-    public void setTotalRevenue(BigDecimal totalRevenue) { this.totalRevenue = totalRevenue; }
-    public void setRoiPercentage(BigDecimal roiPercentage) { this.roiPercentage = roiPercentage; }
+    public int getTotalTransactions() { return totalTransactions; }
+    public void setTotalTransactions(int totalTransactions) {
+        this.totalTransactions = totalTransactions;
+    }
+
+    public double getRoiPercentage() { return roiPercentage; }
+    public void setRoiPercentage(double roiPercentage) {
+        this.roiPercentage = roiPercentage;
+    }
 }
