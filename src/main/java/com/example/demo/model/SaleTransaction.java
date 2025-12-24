@@ -1,29 +1,20 @@
 package com.example.demo.model;
 
-import java.math.BigDecimal;
-import java.sql.Timestamp;
-
 public class SaleTransaction {
-    private BigDecimal transactionAmount;
-    private Timestamp transactionDate;
-    private Long customerId;
-    private DiscountCode discountCode;
 
-    public BigDecimal getTransactionAmount() { return transactionAmount; }
-    public void setTransactionAmount(BigDecimal transactionAmount) {
-        this.transactionAmount = transactionAmount;
+    private Long id;
+    private Double amount;
+
+    public SaleTransaction() {}
+
+    public SaleTransaction(Long id, Double amount) {
+        this.id = id;
+        this.amount = amount;
     }
 
-    public Timestamp getTransactionDate() { return transactionDate; }
-    public void setTransactionDate(Timestamp transactionDate) {
-        this.transactionDate = transactionDate;
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public Long getCustomerId() { return customerId; }
-    public void setCustomerId(Long customerId) { this.customerId = customerId; }
-
-    public DiscountCode getDiscountCode() { return discountCode; }
-    public void setDiscountCode(DiscountCode discountCode) {
-        this.discountCode = discountCode;
-    }
+    public Double getAmount() { return amount; }
+    public void setAmount(Double amount) { this.amount = amount; }
 }

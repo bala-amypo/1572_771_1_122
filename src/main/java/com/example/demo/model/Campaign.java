@@ -1,21 +1,25 @@
 package com.example.demo.model;
 
-import java.time.LocalDate;
-
 public class Campaign {
-    private Long id;
-    private String campaignName;
-    private LocalDate startDate;
-    private LocalDate endDate;
 
-    public String getCampaignName() { return campaignName; }
-    public void setCampaignName(String campaignName) {
-        this.campaignName = campaignName;
+    private Long id;
+    private String name;
+    private Double budget;
+
+    public Campaign() {}
+
+    public Campaign(Long id, String name, Double budget) {
+        this.id = id;
+        this.name = name;
+        this.budget = budget;
     }
 
-    public LocalDate getStartDate() { return startDate; }
-    public void setStartDate(LocalDate startDate) { this.startDate = startDate; }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public LocalDate getEndDate() { return endDate; }
-    public void setEndDate(LocalDate endDate) { this.endDate = endDate; }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+
+    public Double getBudget() { return budget; }
+    public void setBudget(Double budget) { this.budget = budget; }
 }
