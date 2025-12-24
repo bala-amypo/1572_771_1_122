@@ -13,53 +13,37 @@ public class InfluencerController {
 
     private final InfluencerService influencerService;
 
-    // ✅ Constructor injection (Mockito-friendly)
+    // Constructor injection (Mockito-friendly)
     public InfluencerController(InfluencerService influencerService) {
         this.influencerService = influencerService;
     }
 
-    // 🔹 Create Influencer
+    // Create Influencer
     @PostMapping
     public ResponseEntity<Influencer> createInfluencer(
             @RequestBody Influencer influencer) {
 
-        Influencer saved = influencerService.createInfluencer(influencer);
-        return ResponseEntity.ok(saved);
+        return ResponseEntity.ok(
+                influencerService.createInfluencer(influencer)
+        );
     }
 
-    // 🔹 Get Influencer by ID
+    // Get Influencer by ID
     @GetMapping("/{id}")
     public ResponseEntity<Influencer> getInfluencerById(
             @PathVariable Long id) {
 
-        Influencer influencer = influencerService.getInfluencerById(id);
-        return ResponseEntity.ok(influencer);
+        return ResponseEntity.ok(
+                influencerService.getInfluencerById(id)
+        );
     }
 
-    // 🔹 Get all Influencers
+    // Get All Influencers
     @GetMapping
     public ResponseEntity<List<Influencer>> getAllInfluencers() {
 
-        List<Influencer> influencers = influencerService.getAllInfluencers();
-        return ResponseEntity.ok(influencers);
-    }
-
-    // 🔹 Update Influencer
-    @PutMapping("/{id}")
-    public ResponseEntity<Influencer> updateInfluencer(
-            @PathVariable Long id,
-            @RequestBody Influencer influencer) {
-
-        Influencer updated = influencerService.updateInfluencer(id, influencer);
-        return ResponseEntity.ok(updated);
-    }
-
-    // 🔹 Delete Influencer
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteInfluencer(
-            @PathVariable Long id) {
-
-        influencerService.deleteInfluencer(id);
-        return ResponseEntity.ok("Influencer deleted successfully");
+        return ResponseEntity.ok(
+                influencerService.getAllInfluencers()
+        );
     }
 }
