@@ -1,20 +1,23 @@
 package com.example.demo.model;
 
-public class RoiReport {
+import java.math.BigDecimal;
 
-    private Long influencerId;
-    private Double roi;
+public class RoiReport {
+    private Long id;
+    private DiscountCode discountCode;
+    private BigDecimal totalSales;
+    private Integer totalTransactions;
+    private Double roiPercentage;
 
     public RoiReport() {}
 
-    public RoiReport(Long influencerId, Double roi) {
-        this.influencerId = influencerId;
-        this.roi = roi;
-    }
+    public DiscountCode getDiscountCode() { return discountCode; }
+    public BigDecimal getTotalSales() { return totalSales; }
+    public Integer getTotalTransactions() { return totalTransactions; }
+    public Double getRoiPercentage() { return roiPercentage; }
 
-    public Long getInfluencerId() { return influencerId; }
-    public void setInfluencerId(Long influencerId) { this.influencerId = influencerId; }
-
-    public Double getRoi() { return roi; }
-    public void setRoi(Double roi) { this.roi = roi; }
+    public void setDiscountCode(DiscountCode discountCode) { this.discountCode = discountCode; }
+    public void setTotalSales(BigDecimal totalSales) { this.totalSales = totalSales; }
+    public void setTotalTransactions(Integer totalTransactions) { this.totalTransactions = totalTransactions; }
+    public void setRoiPercentage(Double roiPercentage) { this.roiPercentage = roiPercentage; }
 }

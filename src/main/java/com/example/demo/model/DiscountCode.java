@@ -1,43 +1,28 @@
 package com.example.demo.model;
 
 public class DiscountCode {
-
     private Long id;
-    private String code;
-    private Double discount;
+    private String codeValue;
+    private Double discountPercentage;
+    private Influencer influencer;
+    private Campaign campaign;
 
-    // REQUIRED by Spring / Jackson
-    public DiscountCode() {
+    public DiscountCode() {}
+
+    public DiscountCode(String codeValue, Double discountPercentage) {
+        this.codeValue = codeValue;
+        this.discountPercentage = discountPercentage;
     }
 
-    // ✅ ADD THIS CONSTRUCTOR (THIS FIXES YOUR ERROR)
-    public DiscountCode(Long id, String code, Double discount) {
-        this.id = id;
-        this.code = code;
-        this.discount = discount;
-    }
+    public Long getId() { return id; }
+    public String getCodeValue() { return codeValue; }
+    public Double getDiscountPercentage() { return discountPercentage; }
+    public Influencer getInfluencer() { return influencer; }
+    public Campaign getCampaign() { return campaign; }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public Double getDiscount() {
-        return discount;
-    }
-
-    public void setDiscount(Double discount) {
-        this.discount = discount;
-    }
+    public void setId(Long id) { this.id = id; }
+    public void setCodeValue(String codeValue) { this.codeValue = codeValue; }
+    public void setDiscountPercentage(Double discountPercentage) { this.discountPercentage = discountPercentage; }
+    public void setInfluencer(Influencer influencer) { this.influencer = influencer; }
+    public void setCampaign(Campaign campaign) { this.campaign = campaign; }
 }
