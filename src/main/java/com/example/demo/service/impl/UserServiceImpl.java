@@ -1,35 +1,47 @@
-// package com.example.demo.service.impl;
+package com.example.demo.service.impl;
 
-// import org.springframework.beans.factory.annotation.Autowired;
-// import org.springframework.stereotype.Service;
+import com.example.demo.model.User;
+import com.example.demo.service.UserService;
+import org.springframework.stereotype.Service;
 
-// import com.example.demo.model.User;
-// import com.example.demo.repository.UserRepository;
-// import com.example.demo.service.UserService;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
-// @Service
-// public class UserServiceImpl implements UserService {
+@Service
+public class UserServiceImpl implements UserService {
 
-//     @Autowired
-//     private UserRepository userRepository;
+    private final List<User> users = new ArrayList<>();
 
-//     @Override
-//     public User registerUser(User user) {
+    @Override
+    public User createUser(User user) {
+        users.add(user);
+        return user;
+    }
 
-//         if (userRepository.existsByEmail(user.getEmail())) {
-//             throw new RuntimeException("Email already exists");
-//         }
+    @Override
+    public Optional<User> getUserById(Long id) {
+        return users.stream().filter(u -> u.getId().equals(id)).findFirst();
+    }
 
-//         // role defaults to MARKETER (screenshot rule)
-//         if (user.getRole() == null) {
-//             user.setRole("MARKETER");
-//         }
+    @Override
+    public List<User> getAllUsers() {
+        return users;
+    }
 
-//         return userRepository.save(user);
-//     }
+    @Override
+    public User updateUser(Long id, User user) {
+        Optional<User> existing = getUserById(id);
+        if (existing.isPresent()) {
+            users.remove(existing.get());
+            users.add(user);
+            return user;
+        }
+        return null;
+    }
 
-//     @Override
-//     public User findByEmail(String email) {
-//         return userRepository.findByEmail(email); // ✅ FIXED
-//     }
-// }
+    @Override
+    public void deleteUser(Long id) {
+        users.removeIf(u -> u.getId().equals(id));
+    }
+}
