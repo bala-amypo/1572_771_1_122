@@ -1,28 +1,27 @@
-package com.example.demo.controller;
-
-import com.example.demo.model.Campaign;
-import com.example.demo.service.CampaignService;
-import org.springframework.http.ResponseEntity;
-
-import java.util.List;
-
+@RestController
+@RequestMapping("/api/campaigns")
 public class CampaignController {
 
-    private final CampaignService campaignService;
+    private final CampaignService service;
 
-    public CampaignController(CampaignService campaignService) {
-        this.campaignService = campaignService;
+    public CampaignController(CampaignService service) {
+        this.service = service;
     }
 
-    public ResponseEntity<Campaign> updateCampaign(Long id, Campaign campaign) {
-        return ResponseEntity.ok(campaignService.updateCampaign(id, campaign));
+    @PutMapping("/{id}")
+    public ResponseEntity<Campaign> updateCampaign(
+            @PathVariable Long id,
+            @RequestBody Campaign c) {
+        return ResponseEntity.ok(service.updateCampaign(id, c));
     }
 
-    public ResponseEntity<Campaign> getCampaign(Long id) {
-        return ResponseEntity.ok(campaignService.getCampaignById(id));
+    @GetMapping("/{id}")
+    public ResponseEntity<Campaign> getCampaign(@PathVariable Long id) {
+        return ResponseEntity.ok(service.getCampaignById(id));
     }
 
+    @GetMapping
     public ResponseEntity<List<Campaign>> getAllCampaigns() {
-        return ResponseEntity.ok(campaignService.getAllCampaigns());
+        return ResponseEntity.ok(service.getAllCampaigns());
     }
 }
