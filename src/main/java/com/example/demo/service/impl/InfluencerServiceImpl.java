@@ -1,46 +1,34 @@
-// package com.example.demo.service.impl;
+package com.example.demo.service.impl;
 
-// import java.util.List;
+import com.example.demo.model.Influencer;
+import com.example.demo.service.InfluencerService;
+import org.springframework.stereotype.Service;
 
-// import org.springframework.beans.factory.annotation.Autowired;
-// import org.springframework.stereotype.Service;
+import java.util.ArrayList;
+import java.util.List;
 
-// import com.example.demo.model.Influencer;
-// import com.example.demo.repository.InfluencerRepository;
-// import com.example.demo.service.InfluencerService;
+@Service   // ⭐ THIS IS CRITICAL
+public class InfluencerServiceImpl implements InfluencerService {
 
-// @Service
-// public class InfluencerServiceImpl implements InfluencerService {
+    private final List<Influencer> influencers = new ArrayList<>();
 
-//     @Autowired
-//     private InfluencerRepository repository;
+    @Override
+    public Influencer createInfluencer(Influencer influencer) {
+        influencer.setId((long) (influencers.size() + 1));
+        influencers.add(influencer);
+        return influencer;
+    }
 
-//     public Influencer createInfluencer(Influencer influencer) {
-//         return repository.save(influencer);
-//     }
+    @Override
+    public Influencer getInfluencerById(Long id) {
+        return influencers.stream()
+                .filter(i -> i.getId().equals(id))
+                .findFirst()
+                .orElse(null);
+    }
 
-//     public Influencer updateInfluencer(Long id, Influencer influencer) {
-//         return repository.findById(id).map(old -> {
-//             old.setName(influencer.getName());
-//             old.setEmail(influencer.getEmail());
-//             old.setSocialHandle(influencer.getSocialHandle());
-//             return repository.save(old);
-//         }).orElse(null);
-//     }
-
-//     public Influencer getInfluencerById(Long id) {
-//         return repository.findById(id).orElse(null);
-//     }
-
-//     public List<Influencer> getAllInfluencers() {
-//         return repository.findAll();
-//     }
-
-//     public boolean deactivateInfluencer(Long id) {
-//         return repository.findById(id).map(i -> {
-//             i.setActive(false);
-//             repository.save(i);
-//             return true;
-//         }).orElse(false);
-//     }
-// }
+    @Override
+    public List<Influencer> getAllInfluencers() {
+        return influencers;
+    }
+}
