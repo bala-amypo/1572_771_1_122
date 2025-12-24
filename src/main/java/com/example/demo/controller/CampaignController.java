@@ -17,20 +17,15 @@ public class CampaignController {
         this.service = service;
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Campaign> updateCampaign(
-            @PathVariable Long id,
-            @RequestBody Campaign campaign) {
-        return ResponseEntity.ok(service.updateCampaign(id, campaign));
+    public ResponseEntity<Campaign> updateCampaign(Long id, Campaign c) {
+        return ResponseEntity.ok(service.updateCampaign(id, c));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Campaign> getCampaign(@PathVariable Long id) {
+    public ResponseEntity<Campaign> getCampaign(Long id) {
         return ResponseEntity.ok(service.getCampaignById(id));
     }
 
-    @GetMapping
-    public ResponseEntity<List<Campaign>> getAll() {
+    public ResponseEntity<List<Campaign>> getAllCampaigns() {
         return ResponseEntity.ok(service.getAllCampaigns());
     }
 }
