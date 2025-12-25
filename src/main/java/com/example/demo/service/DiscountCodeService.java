@@ -1,19 +1,16 @@
 package com.example.demo.service;
 
 import com.example.demo.model.DiscountCode;
+
 import java.util.List;
 
 public interface DiscountCodeService {
 
-    DiscountCode createDiscountCode(DiscountCode discountCode);
+    DiscountCode getDiscountCode(long id);
 
-    DiscountCode getDiscountCodeById(Long id);
+    DiscountCode updateDiscountCode(long id, DiscountCode discountCode);
 
-    DiscountCode updateDiscountCode(Long id, DiscountCode discountCode);
+    List<DiscountCode> getCodesForInfluencer(long influencerId);
 
-    DiscountCode deactivateDiscountCode(Long id);
-
-    List<DiscountCode> getCodesForInfluencer(Long influencerId);
-
-    List<DiscountCode> getCodesForCampaign(Long campaignId);
+    List<DiscountCode> getCodesForCampaign(long campaignId);
 }

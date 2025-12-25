@@ -3,7 +3,8 @@ package com.example.demo.model;
 public class DiscountCode {
 
     private Long id;
-    private String codeValue;
+    private String code;
+    private double discountPercentage;
     private boolean active = true;
 
     public Long getId() {
@@ -14,12 +15,22 @@ public class DiscountCode {
         this.id = id;
     }
 
-    public String getCodeValue() {
-        return codeValue;
+    // REQUIRED BY SERVICE
+    public String getCode() {
+        return code;
     }
 
-    public void setCodeValue(String codeValue) {
-        this.codeValue = codeValue;
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    // REQUIRED BY SERVICE
+    public double getDiscountPercentage() {
+        return discountPercentage;
+    }
+
+    public void setDiscountPercentage(double discountPercentage) {
+        this.discountPercentage = discountPercentage;
     }
 
     public boolean isActive() {
