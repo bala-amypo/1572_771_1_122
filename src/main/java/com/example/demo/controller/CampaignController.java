@@ -11,21 +11,26 @@ import java.util.List;
 @RequestMapping("/campaigns")
 public class CampaignController {
 
-    private final CampaignService service;
+    private final CampaignService campaignService;
 
-    public CampaignController(CampaignService service) {
-        this.service = service;
+    public CampaignController(CampaignService campaignService) {
+        this.campaignService = campaignService;
     }
 
-    public ResponseEntity<Campaign> updateCampaign(Long id, Campaign c) {
-        return ResponseEntity.ok(service.updateCampaign(id, c));
+    @PutMapping("/{id}")
+    public ResponseEntity<Campaign> updateCampaign(
+            @PathVariable Long id,
+            @RequestBody Campaign campaign) {
+        return ResponseEntity.ok(campaignService.updateCampaign(id, campaign));
     }
 
-    public ResponseEntity<Campaign> getCampaign(Long id) {
-        return ResponseEntity.ok(service.getCampaignById(id));
+    @GetMapping("/{id}")
+    public ResponseEntity<Campaign> getCampaign(@PathVariable Long id) {
+        return ResponseEntity.ok(campaignService.getCampaignById(id));
     }
 
+    @GetMapping
     public ResponseEntity<List<Campaign>> getAllCampaigns() {
-        return ResponseEntity.ok(service.getAllCampaigns());
+        return ResponseEntity.ok(campaignService.getAllCampaigns());
     }
 }

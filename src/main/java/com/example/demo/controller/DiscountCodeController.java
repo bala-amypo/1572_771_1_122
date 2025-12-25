@@ -11,25 +11,33 @@ import java.util.List;
 @RequestMapping("/discount-codes")
 public class DiscountCodeController {
 
-    private final DiscountCodeService service;
+    private final DiscountCodeService discountCodeService;
 
-    public DiscountCodeController(DiscountCodeService service) {
-        this.service = service;
+    public DiscountCodeController(DiscountCodeService discountCodeService) {
+        this.discountCodeService = discountCodeService;
     }
 
-    public ResponseEntity<DiscountCode> getDiscountCode(Long id) {
-        return ResponseEntity.ok(service.getDiscountCodeById(id));
+    @GetMapping("/{id}")
+    public ResponseEntity<DiscountCode> getDiscountCode(@PathVariable Long id) {
+        return ResponseEntity.ok(discountCodeService.getDiscountCodeById(id));
     }
 
-    public ResponseEntity<DiscountCode> updateDiscountCode(Long id, DiscountCode dc) {
-        return ResponseEntity.ok(service.updateDiscountCode(id, dc));
+    @PutMapping("/{id}")
+    public ResponseEntity<DiscountCode> updateDiscountCode(
+            @PathVariable Long id,
+            @RequestBody DiscountCode discountCode) {
+        return ResponseEntity.ok(discountCodeService.updateDiscountCode(id, discountCode));
     }
 
-    public ResponseEntity<List<DiscountCode>> getCodesForInfluencer(Long id) {
-        return ResponseEntity.ok(service.getCodesForInfluencer(id));
+    @GetMapping("/influencer/{influencerId}")
+    public ResponseEntity<List<DiscountCode>> getCodesForInfluencer(
+            @PathVariable Long influencerId) {
+        return ResponseEntity.ok(discountCodeService.getCodesForInfluencer(influencerId));
     }
 
-    public ResponseEntity<List<DiscountCode>> getCodesForCampaign(Long id) {
-        return ResponseEntity.ok(service.getCodesForCampaign(id));
+    @GetMapping("/campaign/{campaignId}")
+    public ResponseEntity<List<DiscountCode>> getCodesForCampaign(
+            @PathVariable Long campaignId) {
+        return ResponseEntity.ok(discountCodeService.getCodesForCampaign(campaignId));
     }
 }

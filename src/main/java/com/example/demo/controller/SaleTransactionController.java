@@ -11,17 +11,31 @@ import java.util.List;
 @RequestMapping("/sales")
 public class SaleTransactionController {
 
-    private final SaleTransactionService service;
+    private final SaleTransactionService saleTransactionService;
 
-    public SaleTransactionController(SaleTransactionService service) {
-        this.service = service;
+    public SaleTransactionController(SaleTransactionService saleTransactionService) {
+        this.saleTransactionService = saleTransactionService;
     }
 
-    public ResponseEntity<SaleTransaction> createSale(SaleTransaction tx) {
-        return ResponseEntity.ok(service.createSale(tx));
+    @PostMapping
+    public ResponseEntity<SaleTransaction> createSale(@RequestBody SaleTransaction saleTransaction) {
+        return ResponseEntity.ok(saleTransactionService.createSale(saleTransaction));
     }
 
-    public ResponseEntity<List<SaleTransaction>> getSalesForCode(Long id) {
-        return ResponseEntity.ok(service.getSalesForCode(id));
+    @GetMapping("/code/{codeId}")
+    public ResponseEntity<List<SaleTransaction>> getSalesForCode(@PathVariable Long codeId) {
+        return ResponseEntity.ok(saleTransactionService.getSalesForCode(codeId));
+    }
+
+    @GetMapping("/influencer/{influencerId}")
+    public ResponseEntity<List<SaleTransaction>> getSalesForInfluencer(
+            @PathVariable Long influencerId) {
+        return ResponseEntity.ok(saleTransactionService.getSalesForInfluencer(influencerId));
+    }
+
+    @GetMapping("/campaign/{campaignId}")
+    public ResponseEntity<List<SaleTransaction>> getSalesForCampaign(
+            @PathVariable Long campaignId) {
+        return ResponseEntity.ok(saleTransactionService.getSalesForCampaign(campaignId));
     }
 }
