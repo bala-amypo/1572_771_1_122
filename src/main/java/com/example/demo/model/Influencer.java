@@ -5,8 +5,8 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(
-    name = "influencers",
-    uniqueConstraints = @UniqueConstraint(columnNames = "socialHandle")
+        name = "influencers",
+        uniqueConstraints = @UniqueConstraint(columnNames = "socialHandle")
 )
 public class Influencer {
 
@@ -36,23 +36,59 @@ public class Influencer {
         }
     }
 
-    // ===== Getters & Setters =====
+    // ===== GETTERS & SETTERS =====
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getId() {
+        return id;
+    }
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public String getSocialHandle() { return socialHandle; }
-    public void setSocialHandle(String socialHandle) { this.socialHandle = socialHandle; }
+    public String getName() {
+        return name;
+    }
 
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    public Boolean getActive() { return active; }
-    public void setActive(Boolean active) { this.active = active; }
+    public String getSocialHandle() {
+        return socialHandle;
+    }
 
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+    public void setSocialHandle(String socialHandle) {
+        this.socialHandle = socialHandle;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    // ✅ REQUIRED BY TEST
+    public Boolean getActive() {
+        return active;
+    }
+
+    // ✅ REQUIRED BY TEST
+    public boolean isActive() {
+        return active != null && active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
 }
