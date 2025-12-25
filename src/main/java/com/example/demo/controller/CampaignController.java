@@ -2,7 +2,6 @@ package com.example.demo.controller;
 
 import com.example.demo.model.Campaign;
 import com.example.demo.service.CampaignService;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,8 +40,7 @@ public class CampaignController {
     }
 
     @PutMapping("/{id}/deactivate")
-    public ResponseEntity<Void> deactivateCampaign(@PathVariable Long id) {
-        campaignService.deactivateCampaign(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<Campaign> deactivateCampaign(@PathVariable Long id) {
+        return ResponseEntity.ok(campaignService.deactivateCampaign(id));
     }
 }
