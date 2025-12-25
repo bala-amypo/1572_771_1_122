@@ -1,37 +1,48 @@
+package com.example.demo.controller;
+
+import com.example.demo.model.Campaign;
+import com.example.demo.service.CampaignService;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/campaigns")
 public class CampaignController {
 
-    private final CampaignService service;
+    private final CampaignService campaignService;
 
-    public CampaignController(CampaignService service) {
-        this.service = service;
+    public CampaignController(CampaignService campaignService) {
+        this.campaignService = campaignService;
     }
 
     @PostMapping
-    public ResponseEntity<Campaign> create(@RequestBody Campaign campaign) {
-        return ResponseEntity.ok(service.create(campaign));
+    public ResponseEntity<Campaign> createCampaign(@RequestBody Campaign campaign) {
+        return ResponseEntity.ok(campaignService.createCampaign(campaign));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Campaign> update(@PathVariable Long id,
-                                           @RequestBody Campaign campaign) {
-        return ResponseEntity.ok(service.update(id, campaign));
+    public ResponseEntity<Campaign> updateCampaign(
+            @PathVariable Long id,
+            @RequestBody Campaign campaign) {
+        return ResponseEntity.ok(campaignService.updateCampaign(id, campaign));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Campaign> get(@PathVariable Long id) {
-        return ResponseEntity.ok(service.get(id));
+    public ResponseEntity<Campaign> getCampaign(@PathVariable Long id) {
+        return ResponseEntity.ok(campaignService.getCampaignById(id));
     }
 
     @GetMapping
-    public ResponseEntity<List<Campaign>> list() {
-        return ResponseEntity.ok(service.getAll());
+    public ResponseEntity<List<Campaign>> getAllCampaigns() {
+        return ResponseEntity.ok(campaignService.getAllCampaigns());
     }
 
     @PutMapping("/{id}/deactivate")
-    public ResponseEntity<Void> deactivate(@PathVariable Long id) {
-        service.deactivate(id);
+    public ResponseEntity<Void> deactivateCampaign(@PathVariable Long id) {
+        campaignService.deactivateCampaign(id);
         return ResponseEntity.noContent().build();
     }
 }
