@@ -1,34 +1,37 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.model.Influencer;
+import com.example.demo.repository.InfluencerRepository;
 import com.example.demo.service.InfluencerService;
+import com.example.demo.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
-@Service   // ⭐ THIS IS CRITICAL
+@Service
 public class InfluencerServiceImpl implements InfluencerService {
 
-    private final List<Influencer> influencers = new ArrayList<>();
+    private final InfluencerRepository influencerRepository;
 
-    @Override
-    public Influencer createInfluencer(Influencer influencer) {
-        influencer.setId((long) (influencers.size() + 1));
-        influencers.add(influencer);
-        return influencer;
+    public InfluencerServiceImpl(InfluencerRepository influencerRepository) {
+        this.influencerRepository = influencerRepository;
     }
 
     @Override
-    public Influencer getInfluencerById(Long id) {
-        return influencers.stream()
-                .filter(i -> i.getId().equals(id))
-                .findFirst()
-                .orElse(null);
+    public Influencer createInfluencer(Influencer influencer) {
+        influencerRepository.findBySocialHandle(influencer.getSocialHandle())
+                .ifPresent(i -> { throw new RuntimeException("Duplicate social handle"); });
+        return influencerRepository.save(influencer);
     }
 
     @Override
     public List<Influencer> getAllInfluencers() {
-        return influencers;
+        return influencerRepository.findAll();
+    }
+
+    @Override
+    public Influencer getInfluencerById(Long id) {
+        return influencerRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Influencer not found"));
     }
 }
