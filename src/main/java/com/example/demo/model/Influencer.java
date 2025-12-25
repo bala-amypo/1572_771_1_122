@@ -1,11 +1,13 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "influencers")
+@Table(
+    name = "influencers",
+    uniqueConstraints = @UniqueConstraint(columnNames = "socialHandle")
+)
 public class Influencer {
 
     @Id
@@ -14,31 +16,43 @@ public class Influencer {
 
     private String name;
 
-    @Column(unique = true)
+    @Column(nullable = false)
     private String socialHandle;
 
-    private boolean active = true;
+    @Column(nullable = false)
+    private String email;
 
-    @OneToMany(mappedBy = "influencer", cascade = CascadeType.ALL)
-    private List<DiscountCode> discountCodes = new ArrayList<>();
+    private Boolean active = true;
+
+    private LocalDateTime createdAt;
 
     public Influencer() {}
 
-    public Influencer(String name, String socialHandle, boolean active) {
-        this.name = name;
-        this.socialHandle = socialHandle;
-        this.active = active;
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+        if (this.active == null) {
+            this.active = true;
+        }
     }
 
-    public Long getId() { return id; }
-    public String getName() { return name; }
-    public String getSocialHandle() { return socialHandle; }
-    public boolean isActive() { return active; }
-    public List<DiscountCode> getDiscountCodes() { return discountCodes; }
+    // ===== Getters & Setters =====
 
+    public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
+
+    public String getName() { return name; }
     public void setName(String name) { this.name = name; }
+
+    public String getSocialHandle() { return socialHandle; }
     public void setSocialHandle(String socialHandle) { this.socialHandle = socialHandle; }
-    public void setActive(boolean active) { this.active = active; }
-    public void setDiscountCodes(List<DiscountCode> discountCodes) { this.discountCodes = discountCodes; }
+
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+
+    public Boolean getActive() { return active; }
+    public void setActive(Boolean active) { this.active = active; }
+
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 }
