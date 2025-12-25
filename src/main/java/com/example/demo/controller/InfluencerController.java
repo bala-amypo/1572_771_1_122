@@ -2,14 +2,13 @@ package com.example.demo.controller;
 
 import com.example.demo.model.Influencer;
 import com.example.demo.service.InfluencerService;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/influencers")
+@RequestMapping("/influencers")
 public class InfluencerController {
 
     private final InfluencerService service;
@@ -19,30 +18,23 @@ public class InfluencerController {
     }
 
     @PostMapping
-    public ResponseEntity<Influencer> create(@RequestBody Influencer influencer) {
+    public ResponseEntity<Influencer> createInfluencer(@RequestBody Influencer influencer) {
         return ResponseEntity.ok(service.createInfluencer(influencer));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Influencer> update(
-            @PathVariable Long id,
-            @RequestBody Influencer influencer) {
-        return ResponseEntity.ok(service.updateInfluencer(id, influencer));
-    }
-
     @GetMapping("/{id}")
-    public ResponseEntity<Influencer> get(@PathVariable Long id) {
-        return ResponseEntity.ok(service.getInfluencerById(id));
+    public ResponseEntity<Influencer> getInfluencer(@PathVariable Long id) {
+        return ResponseEntity.ok(service.getInfluencer(id));
     }
 
     @GetMapping
-    public ResponseEntity<List<Influencer>> getAll() {
+    public ResponseEntity<List<Influencer>> getAllInfluencers() {
         return ResponseEntity.ok(service.getAllInfluencers());
     }
 
     @PutMapping("/{id}/deactivate")
     public ResponseEntity<Void> deactivate(@PathVariable Long id) {
-        service.deactivateInfluencer(id);
-        return ResponseEntity.noContent().build();
+        service.deactivate(id);
+        return ResponseEntity.ok().build();
     }
 }

@@ -1,49 +1,41 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.model.Influencer;
-import com.example.demo.repository.InfluencerRepository;
 import com.example.demo.service.InfluencerService;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class InfluencerServiceImpl implements InfluencerService {
 
-    private final InfluencerRepository influencerRepository;
-
-    public InfluencerServiceImpl(InfluencerRepository influencerRepository) {
-        this.influencerRepository = influencerRepository;
-    }
+    private final List<Influencer> influencers = new ArrayList<>();
 
     @Override
     public Influencer createInfluencer(Influencer influencer) {
-        return influencerRepository.save(influencer);
+        influencers.add(influencer);
+        return influencer;
     }
 
     @Override
-    public Influencer updateInfluencer(Long id, Influencer influencer) {
-        Influencer existing = getInfluencerById(id);
-        existing.setName(influencer.getName());
-        existing.setEmail(influencer.getEmail());
-        return influencerRepository.save(existing);
-    }
-
-    @Override
-    public Influencer getInfluencerById(Long id) {
-        return influencerRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Influencer not found"));
+    public Influencer getInfluencer(Long id) {
+        return influencers.stream()
+                .filter(i -> i.getId().equals(id))
+                .findFirst()
+                .orElse(null);
     }
 
     @Override
     public List<Influencer> getAllInfluencers() {
-        return influencerRepository.findAll();
+        return influencers;
     }
 
     @Override
-    public void deactivateInfluencer(Long id) {
-        Influencer inf = getInfluencerById(id);
-        inf.setActive(false);
-        influencerRepository.save(inf);
+    public void deactivate(Long id) {
+        Influencer influencer = getInfluencer(id);
+        if (influencer != null) {
+            influencer.setActive(false);
+        }
     }
 }
