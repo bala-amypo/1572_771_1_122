@@ -1,42 +1,42 @@
-package com.example.demo.service.impl;
+package com.example.ROI.service.impl;
 
-import com.example.demo.model.DiscountCode;
-import com.example.demo.service.DiscountCodeService;
+import com.example.ROI.model.DiscountCode;
+import com.example.ROI.repository.DiscountCodeRepository;
+import com.example.ROI.service.DiscountCodeService;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class DiscountCodeServiceImpl implements DiscountCodeService {
 
-    private final List<DiscountCode> codes = new ArrayList<>();
+    private final DiscountCodeRepository discountCodeRepository;
 
-    @Override
-    public DiscountCode getDiscountCode(long id) {
-        return codes.stream()
-                .filter(c -> c.getId() == id)
-                .findFirst()
-                .orElse(null);
+    public DiscountCodeServiceImpl(DiscountCodeRepository discountCodeRepository) {
+        this.discountCodeRepository = discountCodeRepository;
     }
 
     @Override
-    public DiscountCode updateDiscountCode(long id, DiscountCode discountCode) {
-        DiscountCode existing = getDiscountCode(id);
-        if (existing != null) {
-            existing.setCode(discountCode.getCode());
-            existing.setDiscountPercentage(discountCode.getDiscountPercentage());
-        }
-        return existing;
+    public DiscountCode getDiscountCodeById(Long id) {
+        return discountCodeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Discount code not found"));
     }
 
     @Override
-    public List<DiscountCode> getCodesForInfluencer(long influencerId) {
-        return codes;
+    public DiscountCode updateDiscountCode(Long id, DiscountCode discountCode) {
+        DiscountCode existing = getDiscountCodeById(id);
+        existing.setCodeValue(discountCode.getCodeValue());
+        existing.setDiscountPercentage(discountCode.getDiscountPercentage());
+        return discountCodeRepository.save(existing);
     }
 
     @Override
-    public List<DiscountCode> getCodesForCampaign(long campaignId) {
-        return codes;
+    public List<DiscountCode> getCodesForInfluencer(Long influencerId) {
+        return discountCodeRepository.findByInfluencerId(influencerId);
+    }
+
+    @Override
+    public List<DiscountCode> getCodesForCampaign(Long campaignId) {
+        return discountCodeRepository.findByCampaignId(campaignId);
     }
 }
