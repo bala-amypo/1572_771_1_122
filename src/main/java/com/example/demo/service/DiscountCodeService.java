@@ -1,6 +1,6 @@
-package com.example.ROI.service;
+package com.example.demo.service;
 
-import com.example.ROI.model.DiscountCode;
+import com.example.demo.model.DiscountCode;
 import java.util.List;
 
 public interface DiscountCodeService {

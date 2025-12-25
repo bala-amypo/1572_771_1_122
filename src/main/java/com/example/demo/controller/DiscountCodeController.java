@@ -1,7 +1,7 @@
-package com.example.ROI.controller;
+package com.example.demo.controller;
 
-import com.example.ROI.model.DiscountCode;
-import com.example.ROI.service.DiscountCodeService;
+import com.example.demo.model.DiscountCode;
+import com.example.demo.service.DiscountCodeService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,8 +1,8 @@
-package com.example.ROI.service.impl;
+package com.example.demo.service.impl;
 
-import com.example.ROI.model.DiscountCode;
-import com.example.ROI.repository.DiscountCodeRepository;
-import com.example.ROI.service.DiscountCodeService;
+import com.example.demo.model.DiscountCode;
+import com.example.demo.repository.DiscountCodeRepository;
+import com.example.demo.service.DiscountCodeService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

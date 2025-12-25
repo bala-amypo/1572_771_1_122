@@ -1,6 +1,6 @@
-package com.example.ROI.repository;
+package com.example.demo.repository;
 
-import com.example.ROI.model.DiscountCode;
+import com.example.demo.model.DiscountCode;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
