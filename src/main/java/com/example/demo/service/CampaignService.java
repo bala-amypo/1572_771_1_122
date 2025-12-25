@@ -5,7 +5,11 @@ import java.util.List;
 
 public interface CampaignService {
 
+    Campaign createCampaign(Campaign campaign);
+
     Campaign updateCampaign(Long id, Campaign campaign);
+
+    Campaign deactivateCampaign(Long id);
 
     Campaign getCampaignById(Long id);
 
