@@ -1,43 +1,49 @@
-package com.example.demo.model;
+package com.example.ROI.model;
 
+import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
+@Table(name = "discount_codes")
 public class DiscountCode {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String code;
-    private double discountPercentage;
-    private boolean active = true;
 
-    public Long getId() {
-        return id;
-    }
+    private String codeValue;
+    private Double discountPercentage;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    @ManyToOne
+    @JoinColumn(name = "influencer_id")
+    private Influencer influencer;
 
-    // REQUIRED BY SERVICE
-    public String getCode() {
-        return code;
-    }
+    @ManyToOne
+    @JoinColumn(name = "campaign_id")
+    private Campaign campaign;
 
-    public void setCode(String code) {
-        this.code = code;
-    }
+    @OneToMany(mappedBy = "discountCode", cascade = CascadeType.ALL)
+    private List<SaleTransaction> sales = new ArrayList<>();
 
-    // REQUIRED BY SERVICE
-    public double getDiscountPercentage() {
-        return discountPercentage;
-    }
+    public DiscountCode() {}
 
-    public void setDiscountPercentage(double discountPercentage) {
+    public DiscountCode(String codeValue, Double discountPercentage) {
+        this.codeValue = codeValue;
         this.discountPercentage = discountPercentage;
     }
 
-    public boolean isActive() {
-        return active;
-    }
+    public Long getId() { return id; }
+    public String getCodeValue() { return codeValue; }
+    public Double getDiscountPercentage() { return discountPercentage; }
+    public Influencer getInfluencer() { return influencer; }
+    public Campaign getCampaign() { return campaign; }
+    public List<SaleTransaction> getSales() { return sales; }
 
-    public void setActive(boolean active) {
-        this.active = active;
-    }
+    public void setId(Long id) { this.id = id; }
+    public void setCodeValue(String codeValue) { this.codeValue = codeValue; }
+    public void setDiscountPercentage(Double discountPercentage) { this.discountPercentage = discountPercentage; }
+    public void setInfluencer(Influencer influencer) { this.influencer = influencer; }
+    public void setCampaign(Campaign campaign) { this.campaign = campaign; }
+    public void setSales(List<SaleTransaction> sales) { this.sales = sales; }
 }

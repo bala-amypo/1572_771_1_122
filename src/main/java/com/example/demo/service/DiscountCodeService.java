@@ -1,16 +1,15 @@
-package com.example.demo.service;
+package com.example.ROI.service;
 
-import com.example.demo.model.DiscountCode;
-
+import com.example.ROI.model.DiscountCode;
 import java.util.List;
 
 public interface DiscountCodeService {
 
-    DiscountCode getDiscountCode(long id);
+    DiscountCode getDiscountCodeById(Long id);
 
-    DiscountCode updateDiscountCode(long id, DiscountCode discountCode);
+    DiscountCode updateDiscountCode(Long id, DiscountCode discountCode);
 
-    List<DiscountCode> getCodesForInfluencer(long influencerId);
+    List<DiscountCode> getCodesForInfluencer(Long influencerId);
 
-    List<DiscountCode> getCodesForCampaign(long campaignId);
+    List<DiscountCode> getCodesForCampaign(Long campaignId);
 }
