@@ -11,36 +11,36 @@ import java.util.List;
 @RequestMapping("/api/influencers")
 public class InfluencerController {
 
-    private final InfluencerService influencerService;
+    private final InfluencerService service;
 
-    public InfluencerController(InfluencerService influencerService) {
-        this.influencerService = influencerService;
+    public InfluencerController(InfluencerService service) {
+        this.service = service;
     }
 
     @PostMapping
-    public ResponseEntity<Influencer> createInfluencer(@RequestBody Influencer influencer) {
-        return ResponseEntity.ok(influencerService.createInfluencer(influencer));
+    public ResponseEntity<Influencer> create(@RequestBody Influencer influencer) {
+        return ResponseEntity.ok(service.createInfluencer(influencer));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Influencer> updateInfluencer(
-            @PathVariable Long id,
-            @RequestBody Influencer influencer) {
-        return ResponseEntity.ok(influencerService.updateInfluencer(id, influencer));
+    public ResponseEntity<Influencer> update(@PathVariable Long id,
+                                             @RequestBody Influencer influencer) {
+        return ResponseEntity.ok(service.updateInfluencer(id, influencer));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Influencer> getInfluencer(@PathVariable Long id) {
-        return ResponseEntity.ok(influencerService.getInfluencerById(id));
+    public ResponseEntity<Influencer> get(@PathVariable Long id) {
+        return ResponseEntity.ok(service.getInfluencer(id));
     }
 
     @GetMapping
-    public ResponseEntity<List<Influencer>> getAllInfluencers() {
-        return ResponseEntity.ok(influencerService.getAllInfluencers());
+    public ResponseEntity<List<Influencer>> list() {
+        return ResponseEntity.ok(service.getAll());
     }
 
     @PutMapping("/{id}/deactivate")
-    public ResponseEntity<Influencer> deactivateInfluencer(@PathVariable Long id) {
-        return ResponseEntity.ok(influencerService.deactivateInfluencer(id));
+    public ResponseEntity<Void> deactivate(@PathVariable Long id) {
+        service.deactivate(id);
+        return ResponseEntity.noContent().build();
     }
 }
