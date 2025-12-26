@@ -16,7 +16,7 @@ public class RoiReport {
     private Long id;
 
     // =====================
-    // SPEC FIELDS
+    // SPEC FIELDS (PERSISTED)
     // =====================
     @ManyToOne
     @JoinColumn(name = "campaign_id", nullable = true)
@@ -28,26 +28,25 @@ public class RoiReport {
 
     private BigDecimal totalSales;
     private BigDecimal totalRevenue;
+
+    // SPEC ROI (DB-safe)
     private BigDecimal roiPercentage;
 
     @Column(nullable = false, updatable = false)
     private Timestamp generatedAt;
 
     // =====================
-    // LEGACY FIELDS (FOR TESTS)
+    // LEGACY TEST FIELDS (NOT PERSISTED)
     // =====================
-
-    /**
-     * Legacy test support – NOT persisted
-     */
     @Transient
     private Integer totalTransactions;
 
-    /**
-     * Legacy test support – NOT persisted
-     */
     @Transient
     private DiscountCode discountCode;
+
+    // Legacy ROI for tests (double)
+    @Transient
+    private Double roiPercentageValue;
 
     // =====================
     // AUTO TIMESTAMP
@@ -72,71 +71,49 @@ public class RoiReport {
         this.totalSales = totalSales;
         this.totalRevenue = totalRevenue;
         this.roiPercentage = roiPercentage;
+        this.roiPercentageValue = roiPercentage != null ? roiPercentage.doubleValue() : null;
     }
 
     // =====================
-    // GETTERS & SETTERS
+    // SPEC GETTERS / SETTERS
     // =====================
-    public Long getId() {
-        return id;
-    }
+    public Long getId() { return id; }
 
-    public Campaign getCampaign() {
-        return campaign;
-    }
+    public Campaign getCampaign() { return campaign; }
 
-    public Influencer getInfluencer() {
-        return influencer;
-    }
+    public Influencer getInfluencer() { return influencer; }
 
-    public BigDecimal getTotalSales() {
-        return totalSales;
-    }
+    public BigDecimal getTotalSales() { return totalSales; }
 
-    public BigDecimal getTotalRevenue() {
-        return totalRevenue;
-    }
+    public BigDecimal getTotalRevenue() { return totalRevenue; }
 
-    public BigDecimal getRoiPercentage() {
+    public BigDecimal getRoiPercentageDecimal() {
         return roiPercentage;
     }
 
-    public Timestamp getGeneratedAt() {
-        return generatedAt;
-    }
+    public Timestamp getGeneratedAt() { return generatedAt; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public void setCampaign(Campaign campaign) { this.campaign = campaign; }
 
-    public void setCampaign(Campaign campaign) {
-        this.campaign = campaign;
-    }
+    public void setInfluencer(Influencer influencer) { this.influencer = influencer; }
 
-    public void setInfluencer(Influencer influencer) {
-        this.influencer = influencer;
-    }
+    public void setTotalSales(BigDecimal totalSales) { this.totalSales = totalSales; }
 
-    public void setTotalSales(BigDecimal totalSales) {
-        this.totalSales = totalSales;
-    }
-
-    public void setTotalRevenue(BigDecimal totalRevenue) {
-        this.totalRevenue = totalRevenue;
-    }
+    public void setTotalRevenue(BigDecimal totalRevenue) { this.totalRevenue = totalRevenue; }
 
     public void setRoiPercentage(BigDecimal roiPercentage) {
         this.roiPercentage = roiPercentage;
+        this.roiPercentageValue = roiPercentage != null ? roiPercentage.doubleValue() : null;
     }
 
     // =====================
-    // LEGACY METHODS (TESTS NEED THESE)
+    // LEGACY TEST METHODS (REQUIRED)
     // =====================
-    public Integer getTotalTransactions() {
-        return totalTransactions;
+    public int getTotalTransactions() {
+        return totalTransactions != null ? totalTransactions : 0;
     }
 
-    public void setTotalTransactions(Integer totalTransactions) {
+    public void setTotalTransactions(int totalTransactions) {
         this.totalTransactions = totalTransactions;
     }
 
@@ -146,5 +123,15 @@ public class RoiReport {
 
     public void setDiscountCode(DiscountCode discountCode) {
         this.discountCode = discountCode;
+    }
+
+    // 🔥 THIS FIXES LINE 336
+    public double getRoiPercentage() {
+        return roiPercentageValue != null ? roiPercentageValue : 0.0;
+    }
+
+    public void setRoiPercentage(double roiPercentage) {
+        this.roiPercentageValue = roiPercentage;
+        this.roiPercentage = BigDecimal.valueOf(roiPercentage);
     }
 }
