@@ -9,6 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/campaigns")
+@SecurityRequirement(name="bearerAuth")
 public class CampaignController {
 
     private final CampaignService campaignService;

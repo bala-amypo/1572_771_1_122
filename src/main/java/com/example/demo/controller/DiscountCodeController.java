@@ -9,6 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/discount-codes")
+@SecurityRequirement(name="bearerAuth")
 public class DiscountCodeController {
 
     private final DiscountCodeService service;
