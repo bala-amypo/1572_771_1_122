@@ -21,7 +21,7 @@ public class RoiServiceImpl implements RoiService {
         return roiReportRepository.findByDiscountCodeInfluencerId(influencerId);
     }
 
-    // ✅ ADD THIS
+    // ✅ NEW
     @Override
     public List<RoiReport> getReportsForCampaign(Long campaignId) {
         return roiReportRepository.findByDiscountCodeCampaignId(campaignId);
