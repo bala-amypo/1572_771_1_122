@@ -4,11 +4,12 @@ import com.example.demo.model.SaleTransaction;
 import com.example.demo.service.SaleTransactionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import java.util.List;
 
 @RestController
 @RequestMapping("/sales")
+@SecurityRequirement(name="bearerAuth")
 public class SaleTransactionController {
 
     private final SaleTransactionService saleTransactionService;
