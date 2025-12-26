@@ -18,37 +18,40 @@ public class DiscountCodeServiceImpl implements DiscountCodeService {
 
     @Override
     public DiscountCode createDiscountCode(DiscountCode discountCode) {
+        discountCode.setActive(true);
         return repository.save(discountCode);
     }
 
-    // ✅ REQUIRED by test
     @Override
-    public DiscountCode getDiscountCodeById(long id) {
-        return repository.findById(id).orElse(null);
-    }
-
-    @Override
-    public List<DiscountCode> getCodesByInfluencer(long influencerId) {
-        return repository.findByInfluencerId(influencerId);
-    }
-
-    @Override
-    public List<DiscountCode> getCodesByCampaign(long campaignId) {
-        return repository.findByCampaignId(campaignId);
-    }
-
-    @Override
-    public DiscountCode updateDiscountCode(long id, DiscountCode discountCode) {
-        DiscountCode existing = getDiscountCodeById(id);
-        existing.setCodeValue(discountCode.getCodeValue());
-        existing.setDiscountPercentage(discountCode.getDiscountPercentage());
+    public DiscountCode updateDiscountCode(Long id, DiscountCode updated) {
+        DiscountCode existing = getDiscountCode(id);
+        existing.setCode(updated.getCode());
+        existing.setDiscountPercentage(updated.getDiscountPercentage());
+        existing.setInfluencer(updated.getInfluencer());
+        existing.setCampaign(updated.getCampaign());
         return repository.save(existing);
     }
 
     @Override
-    public void deactivateDiscountCode(long id) {
-        DiscountCode dc = getDiscountCodeById(id);
-        dc.setActive(false);
-        repository.save(dc);
+    public DiscountCode getDiscountCode(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Discount code not found"));
+    }
+
+    @Override
+    public List<DiscountCode> getCodesForInfluencer(Long influencerId) {
+        return repository.findByInfluencerId(influencerId);
+    }
+
+    @Override
+    public List<DiscountCode> getCodesForCampaign(Long campaignId) {
+        return repository.findByCampaignId(campaignId);
+    }
+
+    @Override
+    public DiscountCode deactivateDiscountCode(Long id) {
+        DiscountCode code = getDiscountCode(id);
+        code.setActive(false);
+        return repository.save(code);
     }
 }

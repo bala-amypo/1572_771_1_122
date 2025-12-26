@@ -3,39 +3,45 @@ package com.example.demo.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "discount_codes")
+@Table(
+    name = "discount_codes",
+    uniqueConstraints = @UniqueConstraint(columnNames = "code")
+)
 public class DiscountCode {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "code", nullable = false, unique = true)
-    private String codeValue;
+    @Column(nullable = false, unique = true)
+    private String code; // ✅ MUST be "code"
 
     private Double discountPercentage;
 
     private Boolean active = true;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "influencer_id")
     private Influencer influencer;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "campaign_id")
     private Campaign campaign;
 
-    // ✅ REQUIRED by tests
     public DiscountCode() {}
+
+    // -------- GETTERS & SETTERS --------
 
     public Long getId() {
         return id;
     }
 
-    public String getCodeValue() {
-        return codeValue;
+    public String getCode() {          // ✅ REQUIRED BY TESTS
+        return code;
     }
 
-    public void setCodeValue(String codeValue) {
-        this.codeValue = codeValue;
+    public void setCode(String code) { // ✅ REQUIRED BY TESTS
+        this.code = code;
     }
 
     public Double getDiscountPercentage() {
