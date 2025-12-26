@@ -22,17 +22,14 @@ public class DiscountCode {
 
     private Boolean active = true;
 
-    // 🔥 MATCHES YOUR Influencer ENTITY
     @ManyToOne(optional = false)
     @JoinColumn(name = "influencer_id")
     private Influencer influencer;
 
-    // 🔥 MATCHES YOUR Campaign ENTITY
     @ManyToOne(optional = false)
     @JoinColumn(name = "campaign_id")
     private Campaign campaign;
 
-    // 🔥 MATCHES YOUR SaleTransaction ENTITY
     @OneToMany(
             mappedBy = "discountCode",
             cascade = CascadeType.ALL,
@@ -57,7 +54,7 @@ public class DiscountCode {
 
     public Boolean getActive() { return active; }
 
-    // ✅ REQUIRED BY TESTS
+    // REQUIRED BY TESTS
     public boolean isActive() {
         return active != null && active;
     }
