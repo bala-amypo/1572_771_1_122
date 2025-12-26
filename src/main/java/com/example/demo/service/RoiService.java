@@ -6,8 +6,7 @@ import java.util.List;
 
 public interface RoiService {
 
-    List<RoiReport> getReportsForInfluencer(Long influencerId);
-
-    // ✅ POST SUPPORT
     RoiReport generateRoiReport(Long codeId);
+
+    List<RoiReport> getReportsForInfluencer(Long influencerId);
 }

@@ -23,24 +23,23 @@ public class RoiServiceImpl implements RoiService {
     }
 
     @Override
-    public List<RoiReport> getReportsForInfluencer(Long influencerId) {
-        return roiReportRepository.findByDiscountCodeInfluencerId(influencerId);
-    }
-
-    // ✅ POST IMPLEMENTATION
-    @Override
     public RoiReport generateRoiReport(Long codeId) {
 
         DiscountCode discountCode = discountCodeRepository.findById(codeId)
                 .orElseThrow(() -> new RuntimeException("Discount code not found"));
 
-        RoiReport report = new RoiReport(
-                discountCode,
-                BigDecimal.ZERO,
-                0,
-                0.0
-        );
+        RoiReport report = new RoiReport();
+        report.setCampaign(discountCode.getCampaign());
+        report.setInfluencer(discountCode.getInfluencer());
+        report.setTotalSales(BigDecimal.ZERO);
+        report.setTotalRevenue(BigDecimal.ZERO);
+        report.setRoiPercentage(BigDecimal.ZERO);
 
         return roiReportRepository.save(report);
+    }
+
+    @Override
+    public List<RoiReport> getReportsForInfluencer(Long influencerId) {
+        return roiReportRepository.findByInfluencerId(influencerId);
     }
 }

@@ -17,16 +17,15 @@ public class RoiReportController {
         this.roiService = roiService;
     }
 
-    @GetMapping("{id}")
-    public ResponseEntity<List<RoiReport>> getReportsForInfluencer(
-            @PathVariable Long influencerId) {
-        return ResponseEntity.ok(roiService.getReportsForInfluencer(influencerId));
-    }
-
-    // ✅ POST ADDED
     @PostMapping("/generate/{codeId}")
     public ResponseEntity<RoiReport> generateRoiReport(
             @PathVariable Long codeId) {
         return ResponseEntity.ok(roiService.generateRoiReport(codeId));
+    }
+
+    @GetMapping("/influencer/{influencerId}")
+    public ResponseEntity<List<RoiReport>> getReportsForInfluencer(
+            @PathVariable Long influencerId) {
+        return ResponseEntity.ok(roiService.getReportsForInfluencer(influencerId));
     }
 }
