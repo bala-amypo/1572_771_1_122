@@ -44,19 +44,19 @@ public class RoiServiceImpl implements RoiService {
                     .multiply(BigDecimal.valueOf(100));
         }
 
-        // ---- IMPORTANT: USE ENTITY CONSTRUCTOR ONLY ----
-        RoiReport report = new RoiReport(
-                campaign,
-                influencer,
-                totalSales,
-                totalRevenue,
-                roiPercentage
-        );
+        // ✅ USE NO-ARGS CONSTRUCTOR (REQUIRED)
+        RoiReport report = new RoiReport();
 
-        // ---- LEGACY TEST FIELDS (TRANSIENT) ----
+        // ---- Persisted fields ----
+        report.setCampaign(campaign);
+        report.setInfluencer(influencer);
+        report.setTotalSales(totalSales);
+        report.setTotalRevenue(totalRevenue);
+        report.setRoiPercentage(roiPercentage);
+
+        // ---- Legacy test fields (TRANSIENT) ----
         report.setTotalTransactions(totalTransactions);
-        report.setDiscountCode(code);
-        report.setRoiPercentage(roiPercentage); // keeps double + BigDecimal in sync
+        report.setDiscountCode(code);   // fixes Swagger + tests
 
         return roiReportRepository.save(report);
     }
