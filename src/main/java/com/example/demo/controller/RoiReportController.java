@@ -17,7 +17,7 @@ public class RoiReportController {
         this.roiService = roiService;
     }
 
-    @GetMapping("/influencer/{influencerId}")
+    @GetMapping("{id}")
     public ResponseEntity<List<RoiReport>> getReportsForInfluencer(
             @PathVariable Long influencerId) {
         return ResponseEntity.ok(roiService.getReportsForInfluencer(influencerId));
