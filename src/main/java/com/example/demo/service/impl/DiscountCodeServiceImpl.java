@@ -22,14 +22,14 @@ public class DiscountCodeServiceImpl implements DiscountCodeService {
     }
 
     @Override
-    public DiscountCode getById(Long id) {
+    public DiscountCode getDiscountCodeById(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("DiscountCode not found"));
     }
 
     @Override
-    public DiscountCode update(Long id, DiscountCode discountCode) {
-        DiscountCode existing = getById(id);
+    public DiscountCode updateDiscountCode(Long id, DiscountCode discountCode) {
+        DiscountCode existing = getDiscountCodeById(id);
         existing.setCodeValue(discountCode.getCodeValue());
         existing.setDiscountPercentage(discountCode.getDiscountPercentage());
         return repository.save(existing);
@@ -37,18 +37,18 @@ public class DiscountCodeServiceImpl implements DiscountCodeService {
 
     @Override
     public void deactivate(Long id) {
-        DiscountCode code = getById(id);
+        DiscountCode code = getDiscountCodeById(id);
         code.setActive(false);
         repository.save(code);
     }
 
     @Override
-    public List<DiscountCode> getByInfluencer(Long influencerId) {
+    public List<DiscountCode> getCodesForInfluencer(Long influencerId) {
         return repository.findByInfluencerId(influencerId);
     }
 
     @Override
-    public List<DiscountCode> getByCampaign(Long campaignId) {
+    public List<DiscountCode> getCodesForCampaign(Long campaignId) {
         return repository.findByCampaignId(campaignId);
     }
 }
