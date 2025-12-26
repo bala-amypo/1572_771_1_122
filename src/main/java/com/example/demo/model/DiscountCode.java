@@ -1,13 +1,11 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(
         name = "discount_codes",
-        uniqueConstraints = @UniqueConstraint(columnNames = "codeValue")
+        uniqueConstraints = @UniqueConstraint(columnNames = "code")
 )
 public class DiscountCode {
 
@@ -16,7 +14,7 @@ public class DiscountCode {
     private Long id;
 
     @Column(nullable = false, unique = true)
-    private String codeValue;
+    private String code;
 
     private Double discountPercentage;
 
@@ -30,31 +28,26 @@ public class DiscountCode {
     @JoinColumn(name = "campaign_id")
     private Campaign campaign;
 
-    @OneToMany(
-            mappedBy = "discountCode",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
-    private List<SaleTransaction> sales = new ArrayList<>();
-
     public DiscountCode() {}
 
-    // ===== GETTERS & SETTERS =====
+    // ===== Getters & Setters =====
 
     public Long getId() { return id; }
+
     public void setId(Long id) { this.id = id; }
 
-    public String getCodeValue() { return codeValue; }
-    public void setCodeValue(String codeValue) { this.codeValue = codeValue; }
+    public String getCode() { return code; }
+
+    public void setCode(String code) { this.code = code; }
 
     public Double getDiscountPercentage() { return discountPercentage; }
+
     public void setDiscountPercentage(Double discountPercentage) {
         this.discountPercentage = discountPercentage;
     }
 
     public Boolean getActive() { return active; }
 
-    // REQUIRED BY TESTS
     public boolean isActive() {
         return active != null && active;
     }
@@ -62,10 +55,14 @@ public class DiscountCode {
     public void setActive(Boolean active) { this.active = active; }
 
     public Influencer getInfluencer() { return influencer; }
-    public void setInfluencer(Influencer influencer) { this.influencer = influencer; }
+
+    public void setInfluencer(Influencer influencer) {
+        this.influencer = influencer;
+    }
 
     public Campaign getCampaign() { return campaign; }
-    public void setCampaign(Campaign campaign) { this.campaign = campaign; }
 
-    public List<SaleTransaction> getSales() { return sales; }
+    public void setCampaign(Campaign campaign) {
+        this.campaign = campaign;
+    }
 }
