@@ -10,46 +10,45 @@ import java.util.List;
 @Service
 public class DiscountCodeServiceImpl implements DiscountCodeService {
 
-    private final DiscountCodeRepository discountCodeRepository;
+    private final DiscountCodeRepository repository;
 
-    public DiscountCodeServiceImpl(DiscountCodeRepository discountCodeRepository) {
-        this.discountCodeRepository = discountCodeRepository;
+    public DiscountCodeServiceImpl(DiscountCodeRepository repository) {
+        this.repository = repository;
     }
 
     @Override
-    public DiscountCode createDiscountCode(DiscountCode discountCode) {
-        discountCode.setActive(true);
-        return discountCodeRepository.save(discountCode);
+    public DiscountCode create(DiscountCode discountCode) {
+        return repository.save(discountCode);
     }
 
     @Override
-    public DiscountCode getDiscountCodeById(Long id) {
-        return discountCodeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Discount code not found"));
+    public DiscountCode getById(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("DiscountCode not found"));
     }
 
     @Override
-    public DiscountCode updateDiscountCode(Long id, DiscountCode discountCode) {
-        DiscountCode existing = getDiscountCodeById(id);
+    public DiscountCode update(Long id, DiscountCode discountCode) {
+        DiscountCode existing = getById(id);
         existing.setCodeValue(discountCode.getCodeValue());
         existing.setDiscountPercentage(discountCode.getDiscountPercentage());
-        return discountCodeRepository.save(existing);
+        return repository.save(existing);
     }
 
     @Override
-    public DiscountCode deactivateDiscountCode(Long id) {
-        DiscountCode existing = getDiscountCodeById(id);
-        existing.setActive(false);
-        return discountCodeRepository.save(existing);
+    public void deactivate(Long id) {
+        DiscountCode code = getById(id);
+        code.setActive(false);
+        repository.save(code);
     }
 
     @Override
-    public List<DiscountCode> getCodesForInfluencer(Long influencerId) {
-        return discountCodeRepository.findByInfluencerId(influencerId);
+    public List<DiscountCode> getByInfluencer(Long influencerId) {
+        return repository.findByInfluencerId(influencerId);
     }
 
     @Override
-    public List<DiscountCode> getCodesForCampaign(Long campaignId) {
-        return discountCodeRepository.findByCampaignId(campaignId);
+    public List<DiscountCode> getByCampaign(Long campaignId) {
+        return repository.findByCampaignId(campaignId);
     }
 }
