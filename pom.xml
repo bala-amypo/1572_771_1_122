@@ -64,14 +64,12 @@
     <artifactId>mysql-connector-j</artifactId>
     <version>9.5.0</version>
     </dependency>	
-	<!-- JWT (compatible with your JwtUtil code) -->
-<dependency>
+	<dependency>
     <groupId>io.jsonwebtoken</groupId>
     <artifactId>jjwt</artifactId>
     <version>0.9.1</version>
 </dependency>
-
-<!-- REQUIRED for Java 17 (fixes DatatypeConverter error) -->
+<!-- REQUIRED for old jjwt on Java 11+ -->
 <dependency>
     <groupId>javax.xml.bind</groupId>
     <artifactId>jaxb-api</artifactId>
@@ -84,7 +82,8 @@
     <version>2.3.1</version>
 </dependency>
 
-	</dependencies>
+
+    </dependencies>
 
 	<build>
 		<plugins>
