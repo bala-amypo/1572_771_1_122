@@ -1,6 +1,6 @@
-package com.example.demo.service;
+package com.example.ROI.service;
 
-import com.example.demo.model.SaleTransaction;
+import com.example.ROI.model.SaleTransaction;
 import java.util.List;
 
 public interface SaleTransactionService {
