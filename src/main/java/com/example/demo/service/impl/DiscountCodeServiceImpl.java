@@ -17,25 +17,29 @@ public class DiscountCodeServiceImpl implements DiscountCodeService {
     }
 
     @Override
-    public DiscountCode createDiscountCode(DiscountCode discountCode) {
-        discountCode.setActive(true);
+    public DiscountCode create(DiscountCode discountCode) {
         return repository.save(discountCode);
     }
 
     @Override
-    public DiscountCode updateDiscountCode(Long id, DiscountCode updated) {
-        DiscountCode existing = getDiscountCode(id);
-        existing.setCode(updated.getCode());
-        existing.setDiscountPercentage(updated.getDiscountPercentage());
-        existing.setInfluencer(updated.getInfluencer());
-        existing.setCampaign(updated.getCampaign());
+    public DiscountCode getDiscountCodeById(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("DiscountCode not found"));
+    }
+
+    @Override
+    public DiscountCode updateDiscountCode(Long id, DiscountCode discountCode) {
+        DiscountCode existing = getDiscountCodeById(id);
+        existing.setCodeValue(discountCode.getCodeValue());
+        existing.setDiscountPercentage(discountCode.getDiscountPercentage());
         return repository.save(existing);
     }
 
     @Override
-    public DiscountCode getDiscountCode(Long id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Discount code not found"));
+    public void deactivate(Long id) {
+        DiscountCode code = getDiscountCodeById(id);
+        code.setActive(false);
+        repository.save(code);
     }
 
     @Override
@@ -46,12 +50,5 @@ public class DiscountCodeServiceImpl implements DiscountCodeService {
     @Override
     public List<DiscountCode> getCodesForCampaign(Long campaignId) {
         return repository.findByCampaignId(campaignId);
-    }
-
-    @Override
-    public DiscountCode deactivateDiscountCode(Long id) {
-        DiscountCode code = getDiscountCode(id);
-        code.setActive(false);
-        return repository.save(code);
     }
 }
