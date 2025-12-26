@@ -6,4 +6,7 @@ import java.util.List;
 public interface RoiService {
 
     List<RoiReport> getReportsForInfluencer(Long influencerId);
+
+    // ✅ ADD THIS
+    List<RoiReport> getReportsForCampaign(Long campaignId);
 }

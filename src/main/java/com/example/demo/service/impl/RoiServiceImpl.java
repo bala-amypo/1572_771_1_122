@@ -20,4 +20,10 @@ public class RoiServiceImpl implements RoiService {
     public List<RoiReport> getReportsForInfluencer(Long influencerId) {
         return roiReportRepository.findByDiscountCodeInfluencerId(influencerId);
     }
+
+    // ✅ ADD THIS
+    @Override
+    public List<RoiReport> getReportsForCampaign(Long campaignId) {
+        return roiReportRepository.findByDiscountCodeCampaignId(campaignId);
+    }
 }

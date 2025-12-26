@@ -8,4 +8,7 @@ import java.util.List;
 public interface RoiReportRepository extends JpaRepository<RoiReport, Long> {
 
     List<RoiReport> findByDiscountCodeInfluencerId(Long influencerId);
+
+    // ✅ ADD THIS
+    List<RoiReport> findByDiscountCodeCampaignId(Long campaignId);
 }
