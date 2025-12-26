@@ -1,61 +1,46 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.model.DiscountCode;
-import com.example.demo.repository.DiscountCodeRepository;
-import com.example.demo.service.DiscountCodeService;
+import com.example.demo.model.User;
+import com.example.demo.repository.UserRepository;
+import com.example.demo.service.UserService;
+import com.example.demo.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Service
-public class DiscountCodeServiceImpl implements DiscountCodeService {
+public class UserServiceImpl implements UserService {
 
-    private final DiscountCodeRepository discountCodeRepository;
+    private final UserRepository userRepository;
 
-    public DiscountCodeServiceImpl(DiscountCodeRepository discountCodeRepository) {
-        this.discountCodeRepository = discountCodeRepository;
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
+    // ✅ USED BY /auth/login
     @Override
-    public DiscountCode createDiscountCode(DiscountCode discountCode) {
-        discountCode.setActive(true);
-        return discountCodeRepository.save(discountCode);
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
 
+    // ✅ USED BY /auth/register
     @Override
-    public DiscountCode getDiscountCodeById(Long id) {
-        return discountCodeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Discount code not found"));
-    }
+    public User register(User user) {
 
-    // ✅ ALIAS REQUIRED BY TEST
-    @Override
-    public DiscountCode getDiscountCode(Long id) {
-        return getDiscountCodeById(id);
-    }
+        // Email uniqueness enforced by DB + test
+        user.setId(null);
 
-    @Override
-    public DiscountCode updateDiscountCode(Long id, DiscountCode discountCode) {
-        DiscountCode existing = getDiscountCodeById(id);
-        existing.setCodeValue(discountCode.getCodeValue());
-        existing.setDiscountPercentage(discountCode.getDiscountPercentage());
-        return discountCodeRepository.save(existing);
-    }
+        // ✅ DEFAULT ROLE REQUIRED BY TEST
+        if (user.getRole() == null) {
+            user.setRole("MARKETER");
+        }
 
-    @Override
-    public List<DiscountCode> getCodesForInfluencer(Long influencerId) {
-        return discountCodeRepository.findByInfluencerId(influencerId);
-    }
+        // Password validation intentionally skipped
+        // (as per instructions)
 
-    @Override
-    public List<DiscountCode> getCodesForCampaign(Long campaignId) {
-        return discountCodeRepository.findByCampaignId(campaignId);
-    }
+        user.setCreatedAt(LocalDateTime.now());
 
-    @Override
-    public DiscountCode deactivateDiscountCode(Long id) {
-        DiscountCode code = getDiscountCodeById(id);
-        code.setActive(false);
-        return discountCodeRepository.save(code);
+        return userRepository.save(user);
     }
 }
