@@ -30,7 +30,7 @@ public class DiscountCodeServiceImpl implements DiscountCodeService {
     @Override
     public DiscountCode updateDiscountCode(Long id, DiscountCode discountCode) {
         DiscountCode existing = getDiscountCodeById(id);
-        existing.setCode(discountCode.getCode());
+        existing.setCodeValue(discountCode.getCodeValue());
         existing.setDiscountPercentage(discountCode.getDiscountPercentage());
         return repository.save(existing);
     }
