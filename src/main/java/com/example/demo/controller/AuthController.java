@@ -20,6 +20,12 @@ public class AuthController {
         this.jwtUtil = jwtUtil;
     }
 
+    // ✅ REQUIRED BY TEST
+    @PostMapping("/register")
+    public ResponseEntity<User> register(@RequestBody User user) {
+        return ResponseEntity.ok(userService.register(user));
+    }
+
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
 
