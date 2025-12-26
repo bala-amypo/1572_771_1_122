@@ -1,5 +1,6 @@
 package com.example.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -8,9 +9,6 @@ import java.sql.Timestamp;
 @Table(name = "roi_reports")
 public class RoiReport {
 
-    // =====================
-    // PRIMARY KEY
-    // =====================
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -29,76 +27,47 @@ public class RoiReport {
     private BigDecimal totalSales;
     private BigDecimal totalRevenue;
 
-    // SPEC ROI (DB-safe)
     private BigDecimal roiPercentage;
 
     @Column(nullable = false, updatable = false)
     private Timestamp generatedAt;
 
     // =====================
-    // LEGACY TEST FIELDS (NOT PERSISTED)
+    // LEGACY TEST FIELDS (HIDDEN FROM API)
     // =====================
+    @JsonIgnore
     @Transient
     private Integer totalTransactions;
 
+    @JsonIgnore
     @Transient
     private DiscountCode discountCode;
 
-    // Legacy ROI for tests (double)
+    @JsonIgnore
     @Transient
     private Double roiPercentageValue;
 
-    // =====================
-    // AUTO TIMESTAMP
-    // =====================
     @PrePersist
     protected void onCreate() {
         this.generatedAt = new Timestamp(System.currentTimeMillis());
     }
 
-    // =====================
-    // CONSTRUCTORS
-    // =====================
     public RoiReport() {}
 
-    public RoiReport(Campaign campaign,
-                     Influencer influencer,
-                     BigDecimal totalSales,
-                     BigDecimal totalRevenue,
-                     BigDecimal roiPercentage) {
-        this.campaign = campaign;
-        this.influencer = influencer;
-        this.totalSales = totalSales;
-        this.totalRevenue = totalRevenue;
-        this.roiPercentage = roiPercentage;
-        this.roiPercentageValue = roiPercentage != null ? roiPercentage.doubleValue() : null;
-    }
-
     // =====================
-    // SPEC GETTERS / SETTERS
+    // GETTERS / SETTERS
     // =====================
     public Long getId() { return id; }
-
     public Campaign getCampaign() { return campaign; }
-
     public Influencer getInfluencer() { return influencer; }
-
     public BigDecimal getTotalSales() { return totalSales; }
-
     public BigDecimal getTotalRevenue() { return totalRevenue; }
-
-    public BigDecimal getRoiPercentageDecimal() {
-        return roiPercentage;
-    }
-
+    public BigDecimal getRoiPercentage() { return roiPercentage; }
     public Timestamp getGeneratedAt() { return generatedAt; }
 
     public void setCampaign(Campaign campaign) { this.campaign = campaign; }
-
     public void setInfluencer(Influencer influencer) { this.influencer = influencer; }
-
     public void setTotalSales(BigDecimal totalSales) { this.totalSales = totalSales; }
-
     public void setTotalRevenue(BigDecimal totalRevenue) { this.totalRevenue = totalRevenue; }
 
     public void setRoiPercentage(BigDecimal roiPercentage) {
@@ -106,9 +75,7 @@ public class RoiReport {
         this.roiPercentageValue = roiPercentage != null ? roiPercentage.doubleValue() : null;
     }
 
-    // =====================
-    // LEGACY TEST METHODS (REQUIRED)
-    // =====================
+    // ===== legacy methods (tests still use them) =====
     public int getTotalTransactions() {
         return totalTransactions != null ? totalTransactions : 0;
     }
@@ -125,13 +92,7 @@ public class RoiReport {
         this.discountCode = discountCode;
     }
 
-    // 🔥 THIS FIXES LINE 336
-    public double getRoiPercentage() {
+    public double getRoiPercentageValue() {
         return roiPercentageValue != null ? roiPercentageValue : 0.0;
-    }
-
-    public void setRoiPercentage(double roiPercentage) {
-        this.roiPercentageValue = roiPercentage;
-        this.roiPercentage = BigDecimal.valueOf(roiPercentage);
     }
 }
