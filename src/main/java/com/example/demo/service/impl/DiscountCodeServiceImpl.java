@@ -17,6 +17,12 @@ public class DiscountCodeServiceImpl implements DiscountCodeService {
     }
 
     @Override
+    public DiscountCode createDiscountCode(DiscountCode discountCode) {
+        discountCode.setActive(true);
+        return discountCodeRepository.save(discountCode);
+    }
+
+    @Override
     public DiscountCode getDiscountCodeById(Long id) {
         return discountCodeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Discount code not found"));
@@ -27,6 +33,13 @@ public class DiscountCodeServiceImpl implements DiscountCodeService {
         DiscountCode existing = getDiscountCodeById(id);
         existing.setCodeValue(discountCode.getCodeValue());
         existing.setDiscountPercentage(discountCode.getDiscountPercentage());
+        return discountCodeRepository.save(existing);
+    }
+
+    @Override
+    public DiscountCode deactivateDiscountCode(Long id) {
+        DiscountCode existing = getDiscountCodeById(id);
+        existing.setActive(false);
         return discountCodeRepository.save(existing);
     }
 
