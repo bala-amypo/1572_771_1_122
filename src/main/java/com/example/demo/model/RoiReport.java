@@ -12,44 +12,99 @@ public class RoiReport {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // Nullable ManyToOne Campaign
     @ManyToOne
-    @JoinColumn(name = "discount_code_id")
-    private DiscountCode discountCode;
+    @JoinColumn(name = "campaign_id", nullable = true)
+    private Campaign campaign;
 
+    // Nullable ManyToOne Influencer
+    @ManyToOne
+    @JoinColumn(name = "influencer_id", nullable = true)
+    private Influencer influencer;
+
+    @Column(nullable = false)
     private BigDecimal totalSales;
-    private Integer totalTransactions;
-    private Double roiPercentage;
+
+    @Column(nullable = false)
+    private BigDecimal totalRevenue;
+
+    @Column(nullable = false)
+    private BigDecimal roiPercentage;
 
     @Column(nullable = false, updatable = false)
     private Timestamp generatedAt;
 
+    // ✅ Auto-generate timestamp
     @PrePersist
-    public void onCreate() {
+    protected void onCreate() {
         this.generatedAt = new Timestamp(System.currentTimeMillis());
     }
 
+    // Constructors
     public RoiReport() {}
 
-    public RoiReport(DiscountCode discountCode,
+    public RoiReport(Campaign campaign,
+                     Influencer influencer,
                      BigDecimal totalSales,
-                     Integer totalTransactions,
-                     Double roiPercentage) {
-        this.discountCode = discountCode;
+                     BigDecimal totalRevenue,
+                     BigDecimal roiPercentage) {
+        this.campaign = campaign;
+        this.influencer = influencer;
         this.totalSales = totalSales;
-        this.totalTransactions = totalTransactions;
+        this.totalRevenue = totalRevenue;
         this.roiPercentage = roiPercentage;
     }
 
-    public Long getId() { return id; }
-    public DiscountCode getDiscountCode() { return discountCode; }
-    public BigDecimal getTotalSales() { return totalSales; }
-    public Integer getTotalTransactions() { return totalTransactions; }
-    public Double getRoiPercentage() { return roiPercentage; }
-    public Timestamp getGeneratedAt() { return generatedAt; }
+    // Getters & Setters
+    public Long getId() {
+        return id;
+    }
 
-    public void setId(Long id) { this.id = id; }
-    public void setDiscountCode(DiscountCode discountCode) { this.discountCode = discountCode; }
-    public void setTotalSales(BigDecimal totalSales) { this.totalSales = totalSales; }
-    public void setTotalTransactions(Integer totalTransactions) { this.totalTransactions = totalTransactions; }
-    public void setRoiPercentage(Double roiPercentage) { this.roiPercentage = roiPercentage; }
+    public Campaign getCampaign() {
+        return campaign;
+    }
+
+    public Influencer getInfluencer() {
+        return influencer;
+    }
+
+    public BigDecimal getTotalSales() {
+        return totalSales;
+    }
+
+    public BigDecimal getTotalRevenue() {
+        return totalRevenue;
+    }
+
+    public BigDecimal getRoiPercentage() {
+        return roiPercentage;
+    }
+
+    public Timestamp getGeneratedAt() {
+        return generatedAt;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setCampaign(Campaign campaign) {
+        this.campaign = campaign;
+    }
+
+    public void setInfluencer(Influencer influencer) {
+        this.influencer = influencer;
+    }
+
+    public void setTotalSales(BigDecimal totalSales) {
+        this.totalSales = totalSales;
+    }
+
+    public void setTotalRevenue(BigDecimal totalRevenue) {
+        this.totalRevenue = totalRevenue;
+    }
+
+    public void setRoiPercentage(BigDecimal roiPercentage) {
+        this.roiPercentage = roiPercentage;
+    }
 }
