@@ -4,8 +4,8 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(
-        name = "discount_codes",
-        uniqueConstraints = @UniqueConstraint(columnNames = "code_value")
+    name = "discount_codes",
+    uniqueConstraints = @UniqueConstraint(columnNames = "code")
 )
 public class DiscountCode {
 
@@ -13,8 +13,8 @@ public class DiscountCode {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "code_value", nullable = false, unique = true)
-    private String codeValue;
+    @Column(nullable = false, unique = true)
+    private String code; // ✅ MUST be "code"
 
     private Double discountPercentage;
 
@@ -30,33 +30,48 @@ public class DiscountCode {
 
     public DiscountCode() {}
 
-    // ===== getters & setters required by tests =====
+    // -------- GETTERS & SETTERS --------
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getId() {
+        return id;
+    }
 
-    public String getCodeValue() { return codeValue; }
-    public void setCodeValue(String codeValue) { this.codeValue = codeValue; }
+    public String getCode() {          // ✅ REQUIRED BY TESTS
+        return code;
+    }
 
-    public Double getDiscountPercentage() { return discountPercentage; }
+    public void setCode(String code) { // ✅ REQUIRED BY TESTS
+        this.code = code;
+    }
+
+    public Double getDiscountPercentage() {
+        return discountPercentage;
+    }
+
     public void setDiscountPercentage(Double discountPercentage) {
         this.discountPercentage = discountPercentage;
     }
 
-    public Boolean getActive() { return active; }
-
-    public boolean isActive() {
-        return active != null && active;
+    public Boolean getActive() {
+        return active;
     }
 
-    public void setActive(Boolean active) { this.active = active; }
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
 
-    public Influencer getInfluencer() { return influencer; }
+    public Influencer getInfluencer() {
+        return influencer;
+    }
+
     public void setInfluencer(Influencer influencer) {
         this.influencer = influencer;
     }
 
-    public Campaign getCampaign() { return campaign; }
+    public Campaign getCampaign() {
+        return campaign;
+    }
+
     public void setCampaign(Campaign campaign) {
         this.campaign = campaign;
     }
