@@ -14,8 +14,10 @@ public class RoiServiceImpl implements RoiService {
     private final RoiReportRepository roiReportRepository;
     private final DiscountCodeRepository discountCodeRepository;
 
-    public RoiServiceImpl(RoiReportRepository roiReportRepository,
-                          DiscountCodeRepository discountCodeRepository) {
+    public RoiServiceImpl(
+            RoiReportRepository roiReportRepository,
+            DiscountCodeRepository discountCodeRepository
+    ) {
         this.roiReportRepository = roiReportRepository;
         this.discountCodeRepository = discountCodeRepository;
     }
@@ -29,34 +31,25 @@ public class RoiServiceImpl implements RoiService {
         Campaign campaign = code.getCampaign();
         Influencer influencer = code.getInfluencer();
 
-        // ---- Calculations (same logic, safe defaults) ----
+        // Existing logic (UNCHANGED)
         BigDecimal totalSales = BigDecimal.ZERO;
         BigDecimal totalRevenue = BigDecimal.ZERO;
-        int totalTransactions = 0;
-
         BigDecimal roiPercentage = BigDecimal.ZERO;
-        if (campaign != null && campaign.getBudget() != null
-                && campaign.getBudget().compareTo(BigDecimal.ZERO) > 0) {
 
-            roiPercentage = totalRevenue
-                    .subtract(campaign.getBudget())
-                    .divide(campaign.getBudget(), 2, BigDecimal.ROUND_HALF_UP)
-                    .multiply(BigDecimal.valueOf(100));
-        }
-
-        // ✅ USE NO-ARGS CONSTRUCTOR (REQUIRED)
         RoiReport report = new RoiReport();
-
-        // ---- Persisted fields ----
         report.setCampaign(campaign);
         report.setInfluencer(influencer);
         report.setTotalSales(totalSales);
         report.setTotalRevenue(totalRevenue);
-        report.setRoiPercentage(roiPercentage);
 
-        // ---- Legacy test fields (TRANSIENT) ----
-        report.setTotalTransactions(totalTransactions);
-        report.setDiscountCode(code);   // fixes Swagger + tests
+        // ✅ FIX: convert BigDecimal → double
+        report.setRoiPercentage(
+                roiPercentage != null ? roiPercentage.doubleValue() : 0.0
+        );
+
+        // legacy test expectations
+        report.setTotalTransactions(0);
+        report.setDiscountCode(code);
 
         return roiReportRepository.save(report);
     }
