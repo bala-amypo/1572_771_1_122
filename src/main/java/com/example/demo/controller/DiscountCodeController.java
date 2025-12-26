@@ -23,37 +23,41 @@ public class DiscountCodeController {
         return ResponseEntity.ok(service.create(discountCode));
     }
 
+    // REQUIRED BY TESTS
+    @GetMapping("/{id}")
+    public ResponseEntity<DiscountCode> getDiscountCode(
+            @PathVariable Long id) {
+        return ResponseEntity.ok(service.getDiscountCodeById(id));
+    }
+
+    // REQUIRED BY TESTS
     @PutMapping("/{id}")
-    public ResponseEntity<DiscountCode> update(
+    public ResponseEntity<DiscountCode> updateDiscountCode(
             @PathVariable Long id,
             @RequestBody DiscountCode discountCode) {
         return ResponseEntity.ok(
                 service.updateDiscountCode(id, discountCode));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<DiscountCode> getById(@PathVariable Long id) {
-        return ResponseEntity.ok(
-                service.getDiscountCodeById(id));
+    @PutMapping("/{id}/deactivate")
+    public ResponseEntity<Void> deactivate(@PathVariable Long id) {
+        service.deactivate(id);
+        return ResponseEntity.ok().build();
     }
 
+    // REQUIRED BY TESTS
     @GetMapping("/influencer/{influencerId}")
-    public ResponseEntity<List<DiscountCode>> byInfluencer(
+    public ResponseEntity<List<DiscountCode>> getCodesForInfluencer(
             @PathVariable Long influencerId) {
         return ResponseEntity.ok(
                 service.getCodesForInfluencer(influencerId));
     }
 
+    // REQUIRED BY TESTS
     @GetMapping("/campaign/{campaignId}")
-    public ResponseEntity<List<DiscountCode>> byCampaign(
+    public ResponseEntity<List<DiscountCode>> getCodesForCampaign(
             @PathVariable Long campaignId) {
         return ResponseEntity.ok(
                 service.getCodesForCampaign(campaignId));
-    }
-
-    @PutMapping("/{id}/deactivate")
-    public ResponseEntity<Void> deactivate(@PathVariable Long id) {
-        service.deactivate(id);
-        return ResponseEntity.ok().build();
     }
 }
