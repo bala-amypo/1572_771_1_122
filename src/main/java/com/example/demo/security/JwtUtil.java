@@ -13,9 +13,7 @@ public class JwtUtil {
     private final String secretKey = "secret-key-for-testing";
     private final long expirationMillis = 1000 * 60 * 60; // 1 hour
 
-    // ===============================
-    // GENERATE TOKEN
-    // ===============================
+    
     public String generateToken(String email, String role, Long userId) {
         return Jwts.builder()
                 .setSubject(email)
@@ -27,9 +25,7 @@ public class JwtUtil {
                 .compact();
     }
 
-    // ===============================
-    // VALIDATE TOKEN
-    // ===============================
+    
     public boolean validateToken(String token) {
         try {
             Jwts.parser()
@@ -41,23 +37,17 @@ public class JwtUtil {
         }
     }
 
-    // ===============================
-    // EXTRACT EMAIL
-    // ===============================
+    
     public String extractEmail(String token) {
         return getClaims(token).getSubject();
     }
 
-    // ===============================
-    // EXTRACT ROLE
-    // ===============================
+    
     public String extractRole(String token) {
         return getClaims(token).get("role", String.class);
     }
 
-    // ===============================
-    // EXTRACT USER ID
-    // ===============================
+    
     public Long extractUserId(String token) {
         return getClaims(token).get("userId", Long.class);
     }

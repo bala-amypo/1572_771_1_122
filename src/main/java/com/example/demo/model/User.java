@@ -35,7 +35,7 @@ public class User {
         }
     }
 
-    // ========= GETTERS & SETTERS =========
+    
 
     public Long getId() {
         return id;
@@ -81,7 +81,7 @@ public class User {
         return createdAt;
     }
 
-    // 🔥 REQUIRED BY TEST CASES
+    
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }

@@ -8,16 +8,12 @@ import java.sql.Timestamp;
 @Table(name = "roi_reports")
 public class RoiReport {
 
-    // =====================
-    // PRIMARY KEY
-    // =====================
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // =====================
-    // PERSISTED FIELDS
-    // =====================
+    
     @ManyToOne
     @JoinColumn(name = "campaign_id", nullable = true)
     private Campaign campaign;
@@ -35,9 +31,7 @@ public class RoiReport {
     @Column(nullable = false, updatable = false)
     private Timestamp generatedAt;
 
-    // =====================
-    // LEGACY TEST FIELDS (NOT STORED)
-    // =====================
+    
     @Transient
     private Integer totalTransactions;
 
@@ -47,17 +41,13 @@ public class RoiReport {
     @Transient
     private Double roiPercentageValue;
 
-    // =====================
-    // AUTO TIMESTAMP
-    // =====================
+    
     @PrePersist
     protected void onCreate() {
         this.generatedAt = new Timestamp(System.currentTimeMillis());
     }
 
-    // =====================
-    // CONSTRUCTORS
-    // =====================
+    
     public RoiReport() {}
 
     public RoiReport(
@@ -76,9 +66,7 @@ public class RoiReport {
                 roiPercentage != null ? roiPercentage.doubleValue() : 0.0;
     }
 
-    // =====================
-    // STANDARD GETTERS / SETTERS
-    // =====================
+    
     public Long getId() {
         return id;
     }
@@ -119,11 +107,7 @@ public class RoiReport {
         this.totalRevenue = totalRevenue;
     }
 
-    // =====================
-    // 🔥 TEST-REQUIRED METHODS
-    // =====================
-
-    // Required by tests
+    
     public int getTotalTransactions() {
         return totalTransactions != null ? totalTransactions : 0;
     }
@@ -140,12 +124,12 @@ public class RoiReport {
         this.discountCode = discountCode;
     }
 
-    // 🔥 FIXES LINE 336 (TEST EXPECTS double)
+    
     public double getRoiPercentageDecimal() {
         return roiPercentage != null ? roiPercentage.doubleValue() : 0.0;
     }
 
-    // Test also calls this
+   
     public double getRoiPercentage() {
         return roiPercentageValue != null ? roiPercentageValue : 0.0;
     }

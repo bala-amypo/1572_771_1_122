@@ -36,8 +36,7 @@ public class Influencer {
         }
     }
 
-    // ===== GETTERS & SETTERS =====
-
+    
     public Long getId() {
         return id;
     }
@@ -70,12 +69,12 @@ public class Influencer {
         this.email = email;
     }
 
-    // ✅ REQUIRED BY TEST
+    
     public Boolean getActive() {
         return active;
     }
 
-    // ✅ REQUIRED BY TEST
+    
     public boolean isActive() {
         return active != null && active;
     }
