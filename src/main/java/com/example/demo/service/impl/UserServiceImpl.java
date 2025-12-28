@@ -23,8 +23,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User register(User user) {
-        user.setId(null); // ensure new user
-        // role + createdAt handled by @PrePersist
+        user.setId(null); 
         return userRepository.save(user);
     }
 }

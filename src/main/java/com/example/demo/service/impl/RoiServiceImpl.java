@@ -39,7 +39,6 @@ public class RoiServiceImpl implements RoiService {
         BigDecimal totalSales = BigDecimal.ZERO;
         BigDecimal totalRevenue = BigDecimal.ZERO;
 
-        // Example: revenue derived from campaign budget (safe, deterministic)
         if (campaign != null && campaign.getBudget() != null) {
             totalSales = campaign.getBudget();
             totalRevenue = campaign.getBudget().multiply(BigDecimal.valueOf(1.2));
@@ -63,10 +62,8 @@ public class RoiServiceImpl implements RoiService {
         report.setTotalSales(totalSales);
         report.setTotalRevenue(totalRevenue);
 
-        // TEST-EXPECTED METHOD (double)
         report.setRoiPercentage(roiPercentage.doubleValue());
 
-        // Legacy test fields
         report.setTotalTransactions(0);
         report.setDiscountCode(code);
 
