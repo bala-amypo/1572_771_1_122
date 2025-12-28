@@ -33,7 +33,7 @@ public class Campaign {
         }
     }
 
-    // ===== GETTERS & SETTERS =====
+    
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -52,7 +52,7 @@ public class Campaign {
 
     public Boolean getActive() { return active; }
 
-    // ✅ REQUIRED BY TEST
+    
     public boolean isActive() {
         return active != null && active;
     }

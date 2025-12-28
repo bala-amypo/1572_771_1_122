@@ -24,14 +24,14 @@ public class DiscountCodeController {
         return ResponseEntity.ok(service.create(discountCode));
     }
 
-    // REQUIRED BY TESTS
+    
     @GetMapping("/{id}")
     public ResponseEntity<DiscountCode> getDiscountCode(
             @PathVariable Long id) {
         return ResponseEntity.ok(service.getDiscountCodeById(id));
     }
 
-    // REQUIRED BY TESTS
+    
     @PutMapping("/{id}")
     public ResponseEntity<DiscountCode> updateDiscountCode(
             @PathVariable Long id,
@@ -46,7 +46,7 @@ public class DiscountCodeController {
         return ResponseEntity.ok().build();
     }
 
-    // REQUIRED BY TESTS
+   
     @GetMapping("/influencer/{influencerId}")
     public ResponseEntity<List<DiscountCode>> getCodesForInfluencer(
             @PathVariable Long influencerId) {
@@ -54,7 +54,7 @@ public class DiscountCodeController {
                 service.getCodesForInfluencer(influencerId));
     }
 
-    // REQUIRED BY TESTS
+    
     @GetMapping("/campaign/{campaignId}")
     public ResponseEntity<List<DiscountCode>> getCodesForCampaign(
             @PathVariable Long campaignId) {

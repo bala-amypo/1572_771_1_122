@@ -20,7 +20,7 @@ public class AuthController {
         this.jwtUtil = jwtUtil;
     }
 
-    // ✅ REQUIRED BY TEST
+    
     @PostMapping("/register")
     public ResponseEntity<User> register(@RequestBody User user) {
         return ResponseEntity.ok(userService.register(user));
@@ -31,8 +31,7 @@ public class AuthController {
 
         User user = userService.findByEmail(request.getEmail());
 
-        // Password validation intentionally skipped
-        // (NOT required by test cases)
+        
 
         String token = jwtUtil.generateToken(
                 user.getEmail(),
