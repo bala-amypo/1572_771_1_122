@@ -32,10 +32,7 @@ public class RoiServiceImpl implements RoiService {
         Campaign campaign = code.getCampaign();
         Influencer influencer = code.getInfluencer();
 
-        /*
-         * SAFE CALCULATION
-         * (No external dependencies → tests still pass)
-         */
+    
         BigDecimal totalSales = BigDecimal.ZERO;
         BigDecimal totalRevenue = BigDecimal.ZERO;
 
